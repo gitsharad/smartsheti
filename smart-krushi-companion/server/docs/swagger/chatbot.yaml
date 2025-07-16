@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: Smart Krushi Companion API - Chatbot
+  version: 1.0.0
+
+tags:
+  - name: Chatbot
+    description: Marathi AI Chatbot for farmers
+
+paths:
+  /chatbot:
+    post:
+      tags: [Chatbot]
+      summary: Ask the Marathi AI chatbot a question
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: "माझ्या शेतात पाणी कधी द्यावे?"
+      responses:
+        200:
+          description: AI chatbot reply
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply:
+                    type: string
+                    description: Marathi reply from the AI chatbot
+                    example: "आपल्या शेतात पाणी द्यावे लागेल कारण मातीची आर्द्रता कमी आहे."
+        400:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: './auth.yaml#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: './auth.yaml#/components/schemas/Error'
+        500:
+          description: AI service error
+          content:
+            application/json:
+              schema:
+                $ref: './auth.yaml#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter your JWT access token 

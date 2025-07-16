@@ -1,0 +1,46 @@
+# Node modules
+node_modules/
+smart-krushi-companion/client/node_modules/
+smart-krushi-companion/server/node_modules/
+
+# Build output
+build/
+dist/
+smart-krushi-companion/client/build/
+smart-krushi-companion/client/dist/
+smart-krushi-companion/server/build/
+smart-krushi-companion/server/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+smart-krushi-companion/client/.env
+smart-krushi-companion/server/.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Misc
+coverage/
+*.local
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Uploads and generated data
+smart-krushi-companion/server/uploads/
+*.tgz
+
+# Ignore sample data and test files
+sample data/
+*.test.js
+*.spec.js 

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>स्मार्ट शेती प्लॅटफॉर्म - आधुनिक शेतीसाठी तंत्रज्ञान</title>
+  <meta name="description" content="स्मार्ट शेती: आधुनिक शेतीसाठी AI, सेन्सर, डेटा अ‍ॅनालिटिक्स, आणि स्मार्ट तंत्रज्ञान. वेब व मोबाइल अ‍ॅप शेतकरी, समन्वयक, आणि प्रशासकांसाठी.">
+  <meta name="keywords" content="स्मार्ट शेती, AI शेती, आधुनिक शेती, कृषी तंत्रज्ञान, स्मार्ट फार्मिंग, वेब अ‍ॅप, मोबाइल अ‍ॅप, Maharashtra Agriculture, Indian AgriTech">
+  <meta property="og:title" content="स्मार्ट शेती प्लॅटफॉर्म - आधुनिक शेतीसाठी तंत्रज्ञान">
+  <meta property="og:description" content="AI, सेन्सर, डेटा अ‍ॅनालिटिक्स, आणि स्मार्ट तंत्रज्ञानासह आधुनिक शेतीसाठी प्लॅटफॉर्म.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="स्मार्ट शेती प्लॅटफॉर्म">
+  <meta name="twitter:description" content="AI, सेन्सर, डेटा अ‍ॅनालिटिक्स, आणि स्मार्ट तंत्रज्ञानासह आधुनिक शेतीसाठी प्लॅटफॉर्म.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <link rel="canonical" href="https://yourdomain.com/">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Baloo 2 and Noto Sans Devanagari -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <!-- SwiperJS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <style>
+    body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; }
+    .swiper { width: 100vw; height: 100vh; }
+    .swiper-slide img { width: 100vw; height: 100vh; object-fit: cover; }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(120deg, rgba(16, 185, 129, 0.7) 0%, rgba(22, 163, 74, 0.7) 100%);
+      z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .app-previews {
+      margin-top: -5rem;
+      z-index: 10;
+      position: relative;
+    }
+    .mockup {
+      background: linear-gradient(135deg, #bbf7d0 0%, #22c55e 100%);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.18);
+    }
+    .nav-anim {
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .nav-link {
+      transition: color 0.2s, border-bottom 0.2s;
+    }
+    .nav-link.active, .nav-link:hover {
+      color: #16a34a;
+      border-bottom: 2px solid #16a34a;
+    }
+    /* Modern glassmorphism and gradient enhancements */
+    .glass-card {
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.18);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34,197,94,0.12);
+    }
+    .modern-gradient {
+      background: linear-gradient(135deg, #bbf7d0 0%, #22c55e 100%);
+    }
+    .feature-icon {
+      font-size: 2.5rem;
+      color: #16a34a;
+      margin-bottom: 0.5rem;
+    }
+    .testimonial {
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #166534;
+    }
+    .testimonial-author {
+      font-weight: bold;
+      color: #15803d;
+    }
+    .svg-divider {
+      display: block;
+      width: 100%;
+      height: 60px;
+      margin: 0;
+      padding: 0;
+    }
+    .mockup, .glass-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .mockup:hover, .glass-card:hover {
+      transform: scale(1.04) translateY(-4px);
+      box-shadow: 0 12px 36px rgba(34,197,94,0.22);
+    }
+    .modern-btn {
+      transition: background 0.2s, transform 0.2s;
+    }
+    .modern-btn:hover {
+      background: #15803d;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-green-50 text-gray-900">
+  <!-- Navbar -->
+  <nav class="nav-anim sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center">
+    <a href="index.html" class="text-2xl font-extrabold text-green-700 tracking-tight">स्मार्ट शेती</a>
+    <ul class="flex gap-6 text-lg font-semibold">
+      <li><a href="index.html" class="nav-link active">मुख्यपृष्ठ</a></li>
+      <li><a href="about.html" class="nav-link">आमच्याबद्दल</a></li>
+      <li><a href="blog.html" class="nav-link">ब्लॉग / अपडेट्स</a></li>
+      <li><a href="contact.html" class="nav-link">संपर्क करा</a></li>
+    </ul>
+  </nav>
+
+  <!-- Fullscreen Hero Slider -->
+  <div class="relative w-full h-screen">
+    <div class="swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="images/slider1.jpg" alt="ड्रोन शेती" /><div class="absolute bottom-10 left-0 w-full text-center text-2xl font-bold text-white drop-shadow-lg">ड्रोनद्वारे स्मार्ट शेती निरीक्षण</div></div>
+        <div class="swiper-slide"><img src="images/slider2.jpg" alt="मशिनरी पीक कापणी" /><div class="absolute bottom-10 left-0 w-full text-center text-2xl font-bold text-white drop-shadow-lg">मोठ्या यंत्राद्वारे पीक कापणी</div></div>
+        <div class="swiper-slide"><img src="images/slider3.jpg" alt="पीक पेरणी" /><div class="absolute bottom-10 left-0 w-full text-center text-2xl font-bold text-white drop-shadow-lg">यांत्रिक पद्धतीने पीक पेरणी</div></div>
+        <div class="swiper-slide"><img src="images/slider4.jpg" alt="सिंचन" /><div class="absolute bottom-10 left-0 w-full text-center text-2xl font-bold text-white drop-shadow-lg">पाईपद्वारे आधुनिक सिंचन</div></div>
+      </div>
+    </div>
+    <div class="hero-overlay animate__animated animate__fadeInDown">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInUp">स्मार्ट शेती प्लॅटफॉर्म</h1>
+      <p class="text-xl md:text-2xl mb-8 font-medium animate__animated animate__fadeInUp animate__delay-1s">AI, सेन्सर, डेटा अ‍ॅनालिटिक्स आणि आधुनिक तंत्रज्ञानासह शेतीचे भविष्य!</p>
+      <div class="flex flex-col md:flex-row gap-4 mb-8 animate__animated animate__fadeInUp animate__delay-2s">
+        <a href="#webapp" class="bg-white text-green-700 font-bold px-8 py-3 rounded shadow hover:bg-green-100 transition text-lg">वेब अ‍ॅप वापरा</a>
+        <a href="#mobileapp" class="bg-green-900 text-white font-bold px-8 py-3 rounded shadow hover:bg-green-800 transition text-lg">मोबाइल अ‍ॅप डाउनलोड करा</a>
+      </div>
+      <div class="text-xs text-gray-100">फोटो: Unsplash.com</div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.swiper', {
+          loop: true,
+          autoplay: { delay: 2500, disableOnInteraction: false },
+          effect: 'fade',
+          fadeEffect: { crossFade: true },
+        });
+      });
+    </script>
+  </div>
+
+  <!-- App Preview Cards -->
+  <section class="app-previews max-w-5xl mx-auto flex flex-col md:flex-row gap-8 justify-center items-center mb-12 px-4">
+    <div class="mockup w-full md:w-1/2 rounded-2xl p-8 flex flex-col items-center shadow-lg hover:scale-105 transition-transform animate__animated animate__fadeInLeft">
+      <img src="images/webapp.png" alt="वेब अ‍ॅप स्क्रीनशॉट" class="w-full max-w-xs rounded-xl shadow-lg mb-4 border border-green-200" />
+      <div class="w-40 h-28 bg-white rounded-lg mb-4 flex items-center justify-center text-green-700 text-2xl font-bold hidden">वेब अ‍ॅप<br>पूर्वावलोकन</div>
+      <p class="mb-4 text-center">संपूर्ण डॅशबोर्ड, नकाशा, अ‍ॅनालिटिक्स आणि बरेच काही वेबवर!</p>
+      <a href="#webapp" class="bg-green-700 text-white font-semibold px-6 py-2 rounded shadow hover:bg-green-800 transition">वेब अ‍ॅप वापरा</a>
+    </div>
+    <div class="mockup w-full md:w-1/2 rounded-2xl p-8 flex flex-col items-center shadow-lg hover:scale-105 transition-transform animate__animated animate__fadeInRight">
+      <img src="images/mobileapp.jpeg" alt="मोबाइल अ‍ॅप स्क्रीनशॉट" class="w-32 h-64 md:w-40 md:h-72 rounded-xl shadow-lg mb-4 border border-green-200 object-contain" />
+      <div class="w-24 h-40 bg-white rounded-xl mb-4 flex items-center justify-center text-green-700 text-2xl font-bold hidden">मोबाइल<br>पूर्वावलोकन</div>
+      <p class="mb-4 text-center">सर्व वैशिष्ट्ये आता आपल्या स्मार्टफोनवर. लवकरच उपलब्ध!</p>
+      <a href="#mobileapp" class="bg-green-700 text-white font-semibold px-6 py-2 rounded shadow hover:bg-green-800 transition">मोबाइल अ‍ॅप डाउनलोड करा</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="max-w-4xl mx-auto py-12 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-2xl font-bold mb-4 text-green-800">स्मार्ट शेती विषयी</h2>
+    <p class="mb-4">स्मार्ट शेती हा एक सर्वसमावेशक डिजिटल प्लॅटफॉर्म आहे जो महाराष्ट्रातील आणि भारतातील शेतीला आधुनिक बनवतो. हा प्लॅटफॉर्म शेतकरी, समन्वयक आणि प्रशासक यांना एकत्र आणतो, रिअल-टाइम फील्ड मॉनिटरिंग, अ‍ॅनालिटिक्स, अलर्ट्स आणि AI-आधारित शिफारसी देतो.</p>
+    <p>आमचा प्लॅटफॉर्म वेब अ‍ॅप आणि मोबाइल अ‍ॅप या दोन्ही स्वरूपात उपलब्ध आहे, जेणेकरून सर्व वापरकर्त्यांना सहज प्रवेश मिळेल.</p>
+  </section>
+
+  <!-- Features Section -->
+  <section class="bg-white py-12 px-4 animate__animated animate__fadeInUp animate__delay-1s">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-2xl font-bold mb-8 text-green-800 text-center">मुख्य वैशिष्ट्ये</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
+          <h3 class="font-semibold text-lg mb-2">फील्ड मॉनिटरिंग व नकाशा</h3>
+          <p>सर्व शेत नकाशावर पहा, सेन्सर डेटा रिअल-टाइममध्ये तपासा, आणि तात्काळ अलर्ट मिळवा.</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
+          <h3 class="font-semibold text-lg mb-2">भूमिकानुसार डॅशबोर्ड</h3>
+          <p>प्रत्येक भूमिकेसाठी (शेतकरी, समन्वयक, प्रशासक) वेगळा डॅशबोर्ड व परवानग्या.</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
+          <h3 class="font-semibold text-lg mb-2">अ‍ॅनालिटिक्स व अहवाल</h3>
+          <p>प्रगत अ‍ॅनालिटिक्स, डाउनलोड करण्यायोग्य अहवाल, आणि AI-आधारित सल्ला.</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
+          <h3 class="font-semibold text-lg mb-2">मोबाइल अ‍ॅप एकत्रीकरण</h3>
+          <p>Android व iOS साठी समर्पित मोबाइल अ‍ॅप (लवकरच उपलब्ध).</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
+          <h3 class="font-semibold text-lg mb-2">अलर्ट्स व सूचना</h3>
+          <p>हवामान, रोग, सिंचन इत्यादीसाठी रिअल-टाइम सूचना – SMS, ईमेल व अ‍ॅपमध्ये.</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
+          <h3 class="font-semibold text-lg mb-2">AI शिफारसी</h3>
+          <p>आपल्या फील्ड डेटावर आधारित वैयक्तिकृत पीक, खत, सिंचन शिफारसी.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="max-w-4xl mx-auto py-12 px-4 animate__animated animate__fadeInUp animate__delay-2s">
+    <h2 class="text-2xl font-bold mb-6 text-green-800">हे कसे कार्य करते?</h2>
+    <ol class="list-decimal list-inside space-y-2">
+      <li>शेतकरी, समन्वयक किंवा प्रशासक म्हणून नोंदणी करा.</li>
+      <li>आपली शेतजमीन जोडा व नकाशावर स्थान सेट करा.</li>
+      <li>सेन्सर कनेक्ट करा व डेटा मॉनिटर करा.</li>
+      <li>अलर्ट्स, सल्ला व शिफारसी मिळवा.</li>
+      <li>वेब किंवा मोबाइल अ‍ॅपवर आपला डॅशबोर्ड वापरा.</li>
+    </ol>
+  </section>
+  <!-- SVG Divider -->
+  <svg class="svg-divider" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#bbf7d0" d="M0,0 C480,60 960,0 1440,60 L1440,60 L0,60 Z"></path></svg>
+  <!-- Platform Workflow Section -->
+  <section class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">प्लॅटफॉर्म वर्कफ्लो</h2>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">📝</span>
+        <h3 class="font-bold text-lg mb-2">नोंदणी व लॉगिन</h3>
+        <p>शेतकरी, समन्वयक किंवा प्रशासक म्हणून सहज नोंदणी करा व लॉगिन करा.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">🗺️</span>
+        <h3 class="font-bold text-lg mb-2">फील्ड मॅपिंग व सेन्सर सेटअप</h3>
+        <p>शेतजमिनीचे स्थान नकाशावर सेट करा, सेन्सर जोडा व डेटा मिळवा.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">📊</span>
+        <h3 class="font-bold text-lg mb-2">रिअल-टाइम मॉनिटरिंग</h3>
+        <p>डॅशबोर्डवर लाईव्ह डेटा, अलर्ट्स व अ‍ॅनालिटिक्स पहा.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">🤖</span>
+        <h3 class="font-bold text-lg mb-2">AI शिफारसी</h3>
+        <p>AI आधारित पीक, खत, सिंचन सल्ला मिळवा.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">📈</span>
+        <h3 class="font-bold text-lg mb-2">अहवाल व अ‍ॅनालिटिक्स</h3>
+        <p>संपूर्ण अहवाल डाउनलोड करा, प्रगत अ‍ॅनालिटिक्स मिळवा.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">📱</span>
+        <h3 class="font-bold text-lg mb-2">मोबाइल अ‍ॅप एकत्रीकरण</h3>
+        <p>सर्व वैशिष्ट्ये आता आपल्या स्मार्टफोनवर.</p>
+      </div>
+    </div>
+  </section>
+  <!-- SVG Divider -->
+  <svg class="svg-divider" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#22c55e" d="M0,0 C480,60 960,0 1440,60 L1440,60 L0,60 Z"></path></svg>
+  <!-- Why Choose SmartSheti Section -->
+  <section class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp animate__delay-1s">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">स्मार्टशेती का निवडावी?</h2>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">🌱</span>
+        <h3 class="font-bold text-lg mb-2">AI-आधारित सल्ला</h3>
+        <p>फील्ड डेटावर आधारित वैयक्तिकृत पीक, खत, सिंचन शिफारसी.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">⚡</span>
+        <h3 class="font-bold text-lg mb-2">रिअल-टाइम अलर्ट्स</h3>
+        <p>हवामान, रोग, सिंचन इत्यादीसाठी तात्काळ सूचना.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">🔒</span>
+        <h3 class="font-bold text-lg mb-2">डेटा सुरक्षा</h3>
+        <p>आपला डेटा सुरक्षित व गोपनीय ठेवला जातो.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">📞</span>
+        <h3 class="font-bold text-lg mb-2">२४x७ सपोर्ट</h3>
+        <p>कधीही मदतीसाठी आमचा सपोर्ट उपलब्ध.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">📱</span>
+        <h3 class="font-bold text-lg mb-2">मोबाइल व वेब अ‍ॅप</h3>
+        <p>सर्व डिव्हाइसेसवर सहज वापरता येईल.</p>
+      </div>
+      <div class="glass-card p-8 flex flex-col items-center text-center">
+        <span class="feature-icon">💡</span>
+        <h3 class="font-bold text-lg mb-2">नवीन तंत्रज्ञान</h3>
+        <p>सतत अद्ययावत व नाविन्यपूर्ण तंत्रज्ञानाचा वापर.</p>
+      </div>
+    </div>
+  </section>
+  <!-- SVG Divider -->
+  <svg class="svg-divider" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#bbf7d0" d="M0,0 C480,60 960,0 1440,60 L1440,60 L0,60 Z"></path></svg>
+  <!-- Testimonials Carousel -->
+  <section class="max-w-4xl mx-auto py-16 px-4 animate__animated animate__fadeInUp animate__delay-2s">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">वापरकर्त्यांचे अभिप्राय</h2>
+    <div class="swiper testimonial-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide testimonial text-center p-8 glass-card">
+          "स्मार्टशेतीमुळे माझ्या शेतात उत्पादन वाढले आणि खर्च कमी झाला!"<br>
+          <span class="testimonial-author">- रामचंद्र पाटील, शेतकरी</span>
+        </div>
+        <div class="swiper-slide testimonial text-center p-8 glass-card">
+          "रिअल-टाइम अलर्ट्स आणि AI सल्ल्यामुळे निर्णय घेणे सोपे झाले."<br>
+          <span class="testimonial-author">- सुमन देशमुख, समन्वयक</span>
+        </div>
+        <div class="swiper-slide testimonial text-center p-8 glass-card">
+          "संपूर्ण टीमचा सपोर्ट उत्कृष्ट आहे. आधुनिक शेतीसाठी उत्तम प्लॅटफॉर्म!"<br>
+          <span class="testimonial-author">- विजय शिंदे, प्रशासक</span>
+        </div>
+      </div>
+      <!-- Swiper Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.testimonial-swiper', {
+          loop: true,
+          autoplay: { delay: 4000, disableOnInteraction: false },
+          pagination: { el: '.swiper-pagination', clickable: true },
+        });
+      });
+    </script>
+  </section>
+  <!-- SVG Divider -->
+  <svg class="svg-divider" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#22c55e" d="M0,0 C480,60 960,0 1440,60 L1440,60 L0,60 Z"></path></svg>
+
+  <!-- FAQ Section -->
+  <section class="bg-white py-12 px-4 animate__animated animate__fadeInUp animate__delay-3s">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-2xl font-bold mb-6 text-green-800">वारंवार विचारले जाणारे प्रश्न</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-semibold">स्मार्ट शेती कोण वापरू शकतो?</h3>
+          <p>शेतकरी, समन्वयक आणि प्रशासक.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold">मोबाइल अ‍ॅप आहे का?</h3>
+          <p>होय! आमचा मोबाइल अ‍ॅप लवकरच Play Store व App Store वर उपलब्ध होईल.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold">सुरुवात कशी करावी?</h3>
+          <p>वरील “वेब अ‍ॅप वापरा” किंवा “मोबाइल अ‍ॅप डाउनलोड करा” वर क्लिक करा. नोंदणी सोपी व मोफत आहे.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold">माझा डेटा सुरक्षित आहे का?</h3>
+          <p>होय, आम्ही आधुनिक सुरक्षा तंत्रज्ञान वापरतो.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-900 text-white py-6 mt-8 text-center animate__animated animate__fadeInUp animate__delay-4s">
+    <div class="mb-2">&copy; २०२४ स्मार्ट शेती प्लॅटफॉर्म. सर्व हक्क राखीव.</div>
+    <div class="text-sm mb-2">भारताच्या भविष्याच्या शेतीसाठी.</div>
+    <div class="flex justify-center gap-4 mt-2">
+      <a href="https://facebook.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg></a>
+      <a href="https://twitter.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 0 0-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.938-.856 2.021-.857 3.17 0 2.188 1.115 4.116 2.823 5.247a4.904 4.904 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 0 1-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 0 1 0 21.543a13.94 13.94 0 0 0 7.548 2.209c9.058 0 14.009-7.513 14.009-14.009 0-.213-.005-.425-.014-.636A10.012 10.012 0 0 0 24 4.557z"/></svg></a>
+      <a href="https://linkedin.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.381-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.599v5.597z"/></svg></a>
+      <a href="mailto:info@smartsheti.com" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 13.065l-11.99-7.065v14.13c0 1.104.896 2 2 2h19.98c1.104 0 2-.896 2-2v-14.13l-11.99 7.065zm11.99-9.065c0-1.104-.896-2-2-2h-19.98c-1.104 0-2 .896-2 2v.217l12 7.08 12-7.08v-.217z"/></svg></a>
+    </div>
+    <div class="text-xs mt-2">info@smartsheti.com | +91 9876543210</div>
+  </footer>
+  <!-- Animate.css CDN for animations -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</body>
+</html> 
