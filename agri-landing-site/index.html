@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="mr">
+<html lang="mr" class="overflow-x-hidden">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,8 +25,10 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <style>
     body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; }
-    .swiper { width: 100vw; height: 100vh; }
-    .swiper-slide img { width: 100vw; height: 100vh; object-fit: cover; }
+    .hero-slider { width: 100vw; height: 100vh; }
+    .hero-slider .swiper-slide img { width: 100vw; height: 100vh; object-fit: cover; }
+    .testimonial-swiper { width: 100%; min-height: 220px; height: auto !important; }
+    .testimonial-swiper .swiper-slide { display: flex; align-items: center; justify-content: center; }
     .hero-overlay {
       position: absolute;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -101,9 +103,51 @@
       background: #15803d;
       transform: scale(1.05);
     }
+    /* Special look for Features section */
+    .features-section {
+      background: linear-gradient(120deg, #e0fce6 0%, #bbf7d0 100%);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px rgba(34,197,94,0.10);
+      padding: 2rem 1rem;
+      margin-bottom: 2rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.85);
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 24px rgba(34,197,94,0.10);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1.5px solid #bbf7d0;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: scale(1.05) translateY(-6px);
+      box-shadow: 0 12px 36px rgba(34,197,94,0.18);
+      background: linear-gradient(120deg, #bbf7d0 0%, #e0fce6 100%);
+    }
+    .feature-card .feature-icon {
+      font-size: 2.8rem;
+      color: #16a34a;
+      margin-bottom: 0.7rem;
+      filter: drop-shadow(0 2px 8px #bbf7d0);
+    }
+    .feature-card h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #15803d;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      color: #166534;
+      text-align: center;
+    }
   </style>
 </head>
-<body class="bg-green-50 text-gray-900">
+<body class="bg-green-50 text-gray-900 overflow-x-hidden">
   <!-- Navbar -->
   <nav class="nav-anim sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center">
     <a href="index.html" class="text-2xl font-extrabold text-green-700 tracking-tight">स्मार्ट शेती</a>
@@ -117,7 +161,7 @@
 
   <!-- Fullscreen Hero Slider -->
   <div class="relative w-full h-screen">
-    <div class="swiper">
+    <div class="swiper hero-slider">
       <div class="swiper-wrapper">
         <div class="swiper-slide"><img src="images/slider1.jpg" alt="ड्रोन शेती" /><div class="absolute bottom-10 left-0 w-full text-center text-2xl font-bold text-white drop-shadow-lg">ड्रोनद्वारे स्मार्ट शेती निरीक्षण</div></div>
         <div class="swiper-slide"><img src="images/slider2.jpg" alt="मशिनरी पीक कापणी" /><div class="absolute bottom-10 left-0 w-full text-center text-2xl font-bold text-white drop-shadow-lg">मोठ्या यंत्राद्वारे पीक कापणी</div></div>
@@ -170,34 +214,38 @@
   </section>
 
   <!-- Features Section -->
-  <section class="bg-white py-12 px-4 animate__animated animate__fadeInUp animate__delay-1s">
-    <div class="max-w-5xl mx-auto">
-      <h2 class="text-2xl font-bold mb-8 text-green-800 text-center">मुख्य वैशिष्ट्ये</h2>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-lg mb-2">फील्ड मॉनिटरिंग व नकाशा</h3>
-          <p>सर्व शेत नकाशावर पहा, सेन्सर डेटा रिअल-टाइममध्ये तपासा, आणि तात्काळ अलर्ट मिळवा.</p>
-        </div>
-        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-lg mb-2">भूमिकानुसार डॅशबोर्ड</h3>
-          <p>प्रत्येक भूमिकेसाठी (शेतकरी, समन्वयक, प्रशासक) वेगळा डॅशबोर्ड व परवानग्या.</p>
-        </div>
-        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-lg mb-2">अ‍ॅनालिटिक्स व अहवाल</h3>
-          <p>प्रगत अ‍ॅनालिटिक्स, डाउनलोड करण्यायोग्य अहवाल, आणि AI-आधारित सल्ला.</p>
-        </div>
-        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-lg mb-2">मोबाइल अ‍ॅप एकत्रीकरण</h3>
-          <p>Android व iOS साठी समर्पित मोबाइल अ‍ॅप (लवकरच उपलब्ध).</p>
-        </div>
-        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-lg mb-2">अलर्ट्स व सूचना</h3>
-          <p>हवामान, रोग, सिंचन इत्यादीसाठी रिअल-टाइम सूचना – SMS, ईमेल व अ‍ॅपमध्ये.</p>
-        </div>
-        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-6 shadow-lg hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-lg mb-2">AI शिफारसी</h3>
-          <p>आपल्या फील्ड डेटावर आधारित वैयक्तिकृत पीक, खत, सिंचन शिफारसी.</p>
-        </div>
+  <section class="features-section max-w-5xl mx-auto py-12 px-4 animate__animated animate__fadeInUp animate__delay-1s">
+    <h2 class="text-2xl font-bold mb-8 text-green-800 text-center">मुख्य वैशिष्ट्ये</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="feature-card">
+        <span class="feature-icon">🗺️</span>
+        <h3>फील्ड मॉनिटरिंग व नकाशा</h3>
+        <p>सर्व शेत नकाशावर पहा, सेन्सर डेटा रिअल-टाइममध्ये तपासा, आणि तात्काळ अलर्ट मिळवा.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">👤</span>
+        <h3>भूमिकानुसार डॅशबोर्ड</h3>
+        <p>प्रत्येक भूमिकेसाठी (शेतकरी, समन्वयक, प्रशासक) वेगळा डॅशबोर्ड व परवानग्या.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <h3>अ‍ॅनालिटिक्स व अहवाल</h3>
+        <p>प्रगत अ‍ॅनालिटिक्स, डाउनलोड करण्यायोग्य अहवाल, आणि AI-आधारित सल्ला.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📱</span>
+        <h3>मोबाइल अ‍ॅप एकत्रीकरण</h3>
+        <p>Android व iOS साठी समर्पित मोबाइल अ‍ॅप (लवकरच उपलब्ध).</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔔</span>
+        <h3>अलर्ट्स व सूचना</h3>
+        <p>हवामान, रोग, सिंचन इत्यादीसाठी रिअल-टाइम सूचना – SMS, ईमेल व अ‍ॅपमध्ये.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <h3>AI शिफारसी</h3>
+        <p>आपल्या फील्ड डेटावर आधारित वैयक्तिकृत पीक, खत, सिंचन शिफारसी.</p>
       </div>
     </div>
   </section>
@@ -360,7 +408,7 @@
       <a href="https://linkedin.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.381-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.599v5.597z"/></svg></a>
       <a href="mailto:info@smartsheti.com" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 13.065l-11.99-7.065v14.13c0 1.104.896 2 2 2h19.98c1.104 0 2-.896 2-2v-14.13l-11.99 7.065zm11.99-9.065c0-1.104-.896-2-2-2h-19.98c-1.104 0-2 .896-2 2v.217l12 7.08 12-7.08v-.217z"/></svg></a>
     </div>
-    <div class="text-xs mt-2">info@smartsheti.com | +91 9876543210</div>
+    <div class="text-xs mt-2">info@smartsheti.com | +91 9850338825</div>
   </footer>
   <!-- Animate.css CDN for animations -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
