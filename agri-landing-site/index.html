@@ -57,6 +57,15 @@
       color: #16a34a;
       border-bottom: 2px solid #16a34a;
     }
+    .mobile-menu {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .desktop-menu { display: none; }
+      .mobile-menu { display: flex; flex-direction: column; gap: 1rem; position: absolute; top: 60px; left: 0; width: 100%; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.08); z-index: 100; padding: 1rem 0; }
+      .mobile-menu a { color: #166534; font-weight: 600; font-size: 1.1rem; padding: 0.5rem 1.5rem; }
+      .mobile-menu a.active, .mobile-menu a:hover { color: #16a34a; border-bottom: 2px solid #16a34a; }
+    }
     /* Modern glassmorphism and gradient enhancements */
     .glass-card {
       background: rgba(255,255,255,0.7);
@@ -85,7 +94,7 @@
     .svg-divider {
       display: block;
       width: 100%;
-      height: 60px;
+      height: auto;
       margin: 0;
       padding: 0;
     }
@@ -151,13 +160,39 @@
   <!-- Navbar -->
   <nav class="nav-anim sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center">
     <a href="index.html" class="text-2xl font-extrabold text-green-700 tracking-tight">स्मार्ट शेती</a>
-    <ul class="flex gap-6 text-lg font-semibold">
+    <button id="menu-toggle" class="md:hidden block text-green-700 focus:outline-none" aria-label="Open menu">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="desktop-menu flex gap-6 text-lg font-semibold">
       <li><a href="index.html" class="nav-link active">मुख्यपृष्ठ</a></li>
       <li><a href="about.html" class="nav-link">आमच्याबद्दल</a></li>
       <li><a href="blog.html" class="nav-link">ब्लॉग / अपडेट्स</a></li>
       <li><a href="contact.html" class="nav-link">संपर्क करा</a></li>
     </ul>
+    <div id="mobile-menu" class="mobile-menu absolute left-0 w-full bg-white shadow-md hidden flex-col items-center"></div>
   </nav>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuLinks = `
+        <a href="index.html" class="nav-link active">मुख्यपृष्ठ</a>
+        <a href="about.html" class="nav-link">आमच्याबद्दल</a>
+        <a href="blog.html" class="nav-link">ब्लॉग / अपडेट्स</a>
+        <a href="contact.html" class="nav-link">संपर्क करा</a>
+      `;
+      mobileMenu.innerHTML = menuLinks;
+      menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      // Hide menu on link click
+      mobileMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    });
+  </script>
 
   <!-- Fullscreen Hero Slider -->
   <div class="relative w-full h-screen">
