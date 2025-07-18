@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Field = require('../models/Field');
 const { logger } = require('../utils/logger');
-
+//mongodb+srv://<db_username>:<db_password>@cluster0.mzxragd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 // Basic authentication middleware
 const auth = async (req, res, next) => {
   try {

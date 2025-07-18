@@ -182,14 +182,13 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
 }
 
 // Schedule data cleanup job (run daily at 2 AM)
-const { SensorData } = require('./utils/mongoClient');
-const schedule = require('node-schedule');
-
-schedule.scheduleJob('0 2 * * *', async () => {
-  try {
-    await SensorData.cleanupOldData();
-    logger.info('Daily data cleanup completed');
-  } catch (error) {
-    logger.error('Error in daily data cleanup:', error);
-  }
-}); 
+// const { SensorData } = require('./utils/mongoClient');
+// const schedule = require('node-schedule');
+// schedule.scheduleJob('0 2 * * *', async () => {
+//   try {
+//     await SensorData.cleanupOldData();
+//     logger.info('Daily data cleanup completed');
+//   } catch (error) {
+//     logger.error('Error in daily data cleanup:', error);
+//   }
+// }); 
