@@ -160,16 +160,16 @@
   <!-- Navbar -->
   <nav class="nav-anim sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center">
     <a href="index.html" class="text-2xl font-extrabold text-green-700 tracking-tight">स्मार्ट शेती</a>
-    <button id="menu-toggle" class="md:hidden block text-green-700 focus:outline-none" aria-label="Open menu">
+    <button id="menu-toggle" class="block md:hidden text-green-700 focus:outline-none" aria-label="Open menu">
       <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <ul class="desktop-menu flex gap-6 text-lg font-semibold">
+    <ul class="desktop-menu hidden md:flex gap-6 text-lg font-semibold">
       <li><a href="index.html" class="nav-link active">मुख्यपृष्ठ</a></li>
       <li><a href="about.html" class="nav-link">आमच्याबद्दल</a></li>
       <li><a href="blog.html" class="nav-link">ब्लॉग / अपडेट्स</a></li>
       <li><a href="contact.html" class="nav-link">संपर्क करा</a></li>
     </ul>
-    <div id="mobile-menu" class="mobile-menu absolute left-0 w-full bg-white shadow-md hidden flex-col items-center"></div>
+    <div id="mobile-menu" class="mobile-menu absolute left-0 w-full bg-white shadow-md hidden flex-col items-center md:hidden"></div>
   </nav>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
