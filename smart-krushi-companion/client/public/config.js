@@ -3,7 +3,7 @@
 window.APP_CONFIG = {
   // API Configuration
   API_URL: process.env.NODE_ENV === 'production' 
-    ? 'https://your-production-domain.com/api/v1'  // Update this for production
+    ? 'https://api.smartsheti.com/api/v1'  // Update this for production
     : '/api/v1',
   
   // Environment

@@ -3,7 +3,7 @@ import axios from 'axios';
 // Use full backend URL for development to avoid proxy issues
 const API_URL = process.env.NODE_ENV === 'production' 
   ? (process.env.REACT_APP_API_URL + '/api/v1')
-  : 'http://localhost:5000/api/v1';
+  : 'http://api.smartsheti.com/api/v1';
 
 // Create axios instance with base URL
 const api = axios.create({
