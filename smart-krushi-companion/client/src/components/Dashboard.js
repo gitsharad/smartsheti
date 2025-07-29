@@ -12,8 +12,10 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState([]);
   const [noDataMsg, setNoDataMsg] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
+  const [fields, setFields] = useState([]);
+  const [selectedFieldId, setSelectedFieldId] = useState('');
+  const [fieldsLoading, setFieldsLoading] = useState(true);
   const threshold = 25;
-  const fieldId = 'plot1';
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,11 +23,37 @@ const Dashboard = () => {
     const user = JSON.parse(localStorage.getItem('user')) || {};
     setCurrentUser(user);
 
+    // Fetch farmer's fields
+    const fetchFields = async () => {
+      setFieldsLoading(true);
+      try {
+        const response = await apiRoutes.getSensorData();
+        const userFields = response.data.fields || [];
+        setFields(userFields);
+        
+        if (userFields.length > 0) {
+          setSelectedFieldId(userFields[0].fieldId);
+        }
+      } catch (error) {
+        console.error('Error fetching fields:', error);
+      } finally {
+        setFieldsLoading(false);
+      }
+    };
+
+    fetchFields();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedFieldId) return;
+
     // Fetch latest sensor data
-    apiRoutes.getLatestSensorData(fieldId)
-      .then(response => setCurrentData(response.data));
+    apiRoutes.getLatestSensorData(selectedFieldId)
+      .then(response => setCurrentData(response.data))
+      .catch(error => console.error('Error fetching latest data:', error));
+      
     // Fetch last 24h data
-    apiRoutes.getSensorData24h(fieldId)
+    apiRoutes.getSensorData24h(selectedFieldId)
       .then(response => {
         setChartData(response.data.data);
         if (response.data.data.length === 0) {
@@ -33,8 +61,9 @@ const Dashboard = () => {
         } else {
           setNoDataMsg('');
         }
-      });
-  }, []);
+      })
+      .catch(error => console.error('Error fetching 24h data:', error));
+  }, [selectedFieldId]);
 
   // Role-based user management links
   const getUserManagementLinks = () => {

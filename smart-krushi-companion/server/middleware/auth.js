@@ -289,13 +289,39 @@ const webAppAccess = (req, res, next) => {
     // Farmers can only access limited web features
     const allowedEndpoints = [
       '/api/v1/profile',
+      '/api/v1/fields',
       '/api/v1/fields/own',
+      '/api/v1/sensor-data',
       '/api/v1/sensor-data/own',
-      '/api/v1/reports/own'
+      '/api/v1/reports/own',
+      '/api/v1/fdss',
+      '/api/v1/disease',
+      '/api/v1/land-report',
+      '/api/v1/land',
+      '/api/v1/chatbot',
+      '/api/v1/ndvi',
+      // Also allow without /api/v1 prefix for route-level middleware
+      '/profile',
+      '/fields',
+      '/fields/own',
+      '/sensor-data',
+      '/sensor-data/own',
+      '/reports/own',
+      '/fdss',
+      '/disease',
+      '/land-report',
+      '/land',
+      '/chatbot',
+      '/ndvi'
     ];
     
     const currentPath = req.path;
-    const isAllowed = allowedEndpoints.some(endpoint => currentPath.startsWith(endpoint));
+    const fullPath = req.originalUrl;
+    
+    // Check both the route path and the full URL path
+    const isAllowed = allowedEndpoints.some(endpoint => 
+      currentPath.startsWith(endpoint) || fullPath.startsWith(endpoint)
+    );
     
     if (!isAllowed) {
       return res.status(403).json({

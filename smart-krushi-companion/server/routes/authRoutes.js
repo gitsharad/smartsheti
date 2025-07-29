@@ -19,6 +19,11 @@ router.post('/login', standardLimiter, login);
 router.post('/refresh-token', standardLimiter, refresh);
 router.post('/forgot-password', standardLimiter, forgotPassword);
 router.post('/reset-password/:token', standardLimiter, resetPassword);
+// Mobile OTP login endpoints
+router.post('/mobile-otp-request', standardLimiter, require('../controllers/authController').mobileOtpRequest);
+router.post('/mobile-otp-verify', standardLimiter, require('../controllers/authController').mobileOtpVerify);
+// Test SMS endpoint (for debugging)
+router.post('/test-sms', standardLimiter, require('../controllers/authController').testSMS);
 
 // Protected routes (require authentication)
 router.post('/register', auth, standardLimiter, register);

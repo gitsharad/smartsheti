@@ -25,6 +25,7 @@ const AdminDashboard = () => {
     // Get current user from localStorage
     const user = JSON.parse(localStorage.getItem('user')) || {};
     setCurrentUser(user);
+    
     // Fetch real stats from API
     setLoadingStats(true);
     api.get('/admin/overview')

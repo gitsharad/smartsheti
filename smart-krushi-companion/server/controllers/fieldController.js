@@ -43,7 +43,7 @@ const createField = async (req, res) => {
         });
       }
       
-      // Check if coordinator can manage this farmer
+      // Check if coordinator can manage this farmer (admins can create for any farmer)
       if (req.user.role === 'coordinator' && farmer.managedBy.toString() !== req.user._id.toString()) {
         return res.status(403).json({
           error: 'Cannot create field for this farmer',
@@ -156,9 +156,32 @@ const getFields = async (req, res) => {
 
     const total = await Field.countDocuments(query);
 
+    // Format fields for frontend using latest structure
+    const formattedFields = fields.map(field => ({
+      _id: field._id,
+      fieldId: field.fieldId,
+      name: field.name,
+      owner: field.owner,
+      assignedTo: field.assignedTo,
+      location: field.location,
+      soilInfo: field.soilInfo,
+      currentCrop: field.currentCrop,
+      sensors: field.sensors,
+      irrigation: field.irrigation,
+      status: field.status,
+      isVerified: field.isVerified,
+      cropHistory: field.cropHistory,
+      financial: field.financial,
+      notes: field.notes,
+      createdBy: field.createdBy,
+      lastUpdatedBy: field.lastUpdatedBy,
+      createdAt: field.createdAt,
+      updatedAt: field.updatedAt
+    }));
+
     res.json({
       success: true,
-      fields,
+      fields: formattedFields,
       pagination: {
         current: parseInt(page),
         total: Math.ceil(total / limit),

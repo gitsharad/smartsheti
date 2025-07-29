@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="mr" class="overflow-x-hidden">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Krishi - भारताचा सर्वात विश्वसनीय कृषी तंत्रज्ञान प्लॅटफॉर्म</title>
+  <meta name="description" content="AI Krishi: भारताचा सर्वात विश्वसनीय कृषी तंत्रज्ञान प्लॅटफॉर्म. AI, IoT सेन्सर, डेटा विश्लेषण, पारदर्शकता आणि सुरक्षा सह आधुनिक शेती.">
+  <meta name="keywords" content="AI Krishi, स्मार्ट शेती, AI कृषी, IoT सेन्सर, डेटा विश्लेषण, कृषी तंत्रज्ञान, भारतीय शेती, Maharashtra Agriculture, AgriTech India">
+  <meta property="og:title" content="AI Krishi - भारताचा सर्वात विश्वसनीय कृषी तंत्रज्ञान प्लॅटफॉर्म">
+  <meta property="og:description" content="AI, IoT सेन्सर, डेटा विश्लेषण, पारदर्शकता आणि सुरक्षा सह आधुनिक शेतीसाठी प्लॅटफॉर्म.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aikrishi.com/">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI Krishi - भारताचा सर्वात विश्वसनीय कृषी तंत्रज्ञान प्लॅटफॉर्म">
+  <meta name="twitter:description" content="AI, IoT सेन्सर, डेटा विश्लेषण, पारदर्शकता आणि सुरक्षा सह आधुनिक शेतीसाठी प्लॅटफॉर्म.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <link rel="canonical" href="https://aikrishi.com/">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <!-- SwiperJS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
+  <style>
+    body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; }
+    .hero-slider { width: 100vw; height: 100vh; }
+    .hero-slider .swiper-slide img { width: 100vw; height: 100vh; object-fit: cover; }
+    .testimonial-swiper { width: 100%; min-height: 220px; height: auto !important; }
+    .testimonial-swiper .swiper-slide { display: flex; align-items: center; justify-content: center; }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(120deg, rgba(16, 185, 129, 0.8) 0%, rgba(22, 163, 74, 0.8) 100%);
+      z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.18);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34,197,94,0.12);
+    }
+    .modern-gradient {
+      background: linear-gradient(135deg, #bbf7d0 0%, #22c55e 100%);
+    }
+    .feature-icon {
+      font-size: 2.5rem;
+      color: #16a34a;
+      margin-bottom: 0.5rem;
+    }
+    .trust-score {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0 auto 1rem;
+    }
+    .nav-anim {
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .nav-link {
+      transition: color 0.2s, border-bottom 0.2s;
+    }
+    .nav-link.active, .nav-link:hover {
+      color: #16a34a;
+      border-bottom: 2px solid #16a34a;
+    }
+    .mobile-menu {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .desktop-menu { display: none; }
+      .mobile-menu { display: flex; flex-direction: column; gap: 1rem; position: absolute; top: 60px; left: 0; width: 100%; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.08); z-index: 100; padding: 1rem 0; }
+      .mobile-menu a { color: #166534; font-weight: 600; font-size: 1.1rem; padding: 0.5rem 1.5rem; }
+      .mobile-menu a.active, .mobile-menu a:hover { color: #16a34a; border-bottom: 2px solid #16a34a; }
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.85);
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 24px rgba(34,197,94,0.10);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1.5px solid #bbf7d0;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: scale(1.05) translateY(-6px);
+      box-shadow: 0 12px 36px rgba(34,197,94,0.18);
+      background: linear-gradient(120deg, #bbf7d0 0%, #e0fce6 100%);
+    }
+    .modern-btn {
+      transition: background 0.2s, transform 0.2s;
+    }
+    .modern-btn:hover {
+      background: #15803d;
+      transform: scale(1.05);
+    }
+    .stats-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #bbf7d0;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .stats-card:hover {
+      transform: translateY(-4px);
+    }
+  </style>
+</head>
+<body class="bg-green-50 text-gray-900 overflow-x-hidden">
+  <!-- Navbar -->
+  <nav class="nav-anim sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center">
+    <a href="index-enhanced.html" class="text-2xl font-extrabold text-green-700 tracking-tight">AI Krishi</a>
+    <button id="menu-toggle" class="block md:hidden text-green-700 focus:outline-none" aria-label="Open menu">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="desktop-menu hidden md:flex gap-6 text-lg font-semibold">
+      <li><a href="#home" class="nav-link active">मुख्यपृष्ठ</a></li>
+      <li><a href="#features" class="nav-link">वैशिष्ट्ये</a></li>
+      <li><a href="#trust" class="nav-link">विश्वास</a></li>
+      <li><a href="#ai" class="nav-link">AI तंत्रज्ञान</a></li>
+      <li><a href="#contact" class="nav-link">संपर्क</a></li>
+    </ul>
+    <div id="mobile-menu" class="mobile-menu absolute left-0 w-full bg-white shadow-md hidden flex-col items-center md:hidden"></div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative w-full h-screen">
+    <div class="swiper hero-slider">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="images/slider1.jpg" alt="AI कृषी तंत्रज्ञान" /></div>
+        <div class="swiper-slide"><img src="images/slider2.jpg" alt="IoT सेन्सर तंत्रज्ञान" /></div>
+        <div class="swiper-slide"><img src="images/slider3.jpg" alt="डेटा विश्लेषण" /></div>
+        <div class="swiper-slide"><img src="images/slider4.jpg" alt="स्मार्ट शेती" /></div>
+      </div>
+    </div>
+    <div class="hero-overlay animate__animated animate__fadeInDown">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInUp">AI Krishi</h1>
+      <p class="text-xl md:text-2xl mb-4 font-medium animate__animated animate__fadeInUp animate__delay-1s">भारताचा सर्वात विश्वसनीय कृषी तंत्रज्ञान प्लॅटफॉर्म</p>
+      <div class="trust-score animate__animated animate__fadeInUp animate__delay-2s">98.5</div>
+      <p class="text-lg mb-8 animate__animated animate__fadeInUp animate__delay-2s">विश्वास स्कोअर</p>
+      <div class="flex flex-col md:flex-row gap-4 mb-8 animate__animated animate__fadeInUp animate__delay-3s">
+        <a href="#features" class="bg-white text-green-700 font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-green-100 transition text-lg modern-btn">वैशिष्ट्ये पहा</a>
+        <a href="#contact" class="bg-green-900 text-white font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-green-800 transition text-lg modern-btn">सुरुवात करा</a>
+      </div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.swiper', {
+          loop: true,
+          autoplay: { delay: 3000, disableOnInteraction: false },
+          effect: 'fade',
+          fadeEffect: { crossFade: true },
+        });
+      });
+    </script>
+  </section>
+
+  <!-- Trust Indicators Section -->
+  <section class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">आमचे विश्वास निर्देशक</h2>
+    <div class="grid md:grid-cols-4 gap-8">
+      <div class="stats-card">
+        <div class="text-3xl font-bold text-green-700 mb-2">99.9%</div>
+        <div class="text-lg font-semibold text-green-800">सिस्टम उपलब्धता</div>
+        <div class="text-sm text-gray-600 mt-2">24x7 सुरक्षित सेवा</div>
+      </div>
+      <div class="stats-card">
+        <div class="text-3xl font-bold text-green-700 mb-2">&lt;200ms</div>
+        <div class="text-lg font-semibold text-green-800">प्रतिसाद वेळ</div>
+        <div class="text-sm text-gray-600 mt-2">जलद प्रतिसाद</div>
+      </div>
+      <div class="stats-card">
+        <div class="text-3xl font-bold text-green-700 mb-2">98%</div>
+        <div class="text-lg font-semibold text-green-800">डेटा अचूकता</div>
+        <div class="text-sm text-gray-600 mt-2">AI मॉडेल अचूकता</div>
+      </div>
+      <div class="stats-card">
+        <div class="text-3xl font-bold text-green-700 mb-2">4.8/5</div>
+        <div class="text-lg font-semibold text-green-800">वापरकर्ता समाधान</div>
+        <div class="text-sm text-gray-600 mt-2">1,180+ पडताळलेले पुनरावलोकने</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">संपूर्ण वैशिष्ट्ये</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- AI Features -->
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <h3 class="font-bold text-lg mb-2">AI तंत्रज्ञान</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• पीक शिफारसी</li>
+          <li>• रोग ओळखणे</li>
+          <li>• पीक उत्पादन अंदाज</li>
+          <li>• सिंचन सल्ला</li>
+          <li>• पारदर्शक AI निर्णय</li>
+        </ul>
+      </div>
+      
+      <!-- IoT Sensors -->
+      <div class="feature-card">
+        <span class="feature-icon">📡</span>
+        <h3 class="font-bold text-lg mb-2">IoT सेन्सर</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• माती आर्द्रता सेन्सर</li>
+          <li>• तापमान सेन्सर</li>
+          <li>• हवामान सेन्सर</li>
+          <li>• रिअल-टाइम डेटा</li>
+          <li>• स्वयंचलित अलर्ट्स</li>
+        </ul>
+      </div>
+      
+      <!-- Data Analytics -->
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <h3 class="font-bold text-lg mb-2">डेटा विश्लेषण</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• प्रगत अ‍ॅनालिटिक्स</li>
+          <li>• रिअल-टाइम डॅशबोर्ड</li>
+          <li>• अहवाल आणि चार्ट्स</li>
+          <li>• डेटा निर्यात</li>
+          <li>• कस्टम अहवाल</li>
+        </ul>
+      </div>
+      
+      <!-- Security -->
+      <div class="feature-card">
+        <span class="feature-icon">🔒</span>
+        <h3 class="font-bold text-lg mb-2">सुरक्षा आणि गोपनीयता</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• एन्क्रिप्शन</li>
+          <li>• MFA सुरक्षा</li>
+          <li>• GDPR अनुपालन</li>
+          <li>• डेटा पारदर्शकता</li>
+          <li>• सुरक्षा ऑडिट</li>
+        </ul>
+      </div>
+      
+      <!-- Mobile App -->
+      <div class="feature-card">
+        <span class="feature-icon">📱</span>
+        <h3 class="font-bold text-lg mb-2">मोबाइल अ‍ॅप</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• Android आणि iOS</li>
+          <li>• ऑफलाइन कार्यक्षमता</li>
+          <li>• पुश सूचना</li>
+          <li>• स्कॅन QR कोड</li>
+          <li>• व्हॉइस कमांड्स</li>
+        </ul>
+      </div>
+      
+      <!-- Multi-User -->
+      <div class="feature-card">
+        <span class="feature-icon">👥</span>
+        <h3 class="font-bold text-lg mb-2">बहु-वापरकर्ता प्लॅटफॉर्म</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• शेतकरी</li>
+          <li>• समन्वयक</li>
+          <li>• प्रशासक</li>
+          <li>• भूमिका-आधारित पहा</li>
+          <li>• परवानगी व्यवस्थापन</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust & Transparency Section -->
+  <section id="trust" class="bg-green-100 py-16 px-4 animate__animated animate__fadeInUp">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">विश्वास आणि पारदर्शकता</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="glass-card p-8">
+          <h3 class="text-2xl font-bold text-green-800 mb-4">🔍 पूर्ण पारदर्शकता</h3>
+          <ul class="space-y-3 text-gray-700">
+            <li>• <strong>डेटा संग्रह:</strong> कोणता डेटा संग्रहित केला जातो ते पहा</li>
+            <li>• <strong>डेटा वापर:</strong> डेटा कसा वापरला जातो ते जाणून घ्या</li>
+            <li>• <strong>AI निर्णय:</strong> AI निर्णयांचे स्पष्टीकरण</li>
+            <li>• <strong>सहमती व्यवस्थापन:</strong> आपली सहमती व्यवस्थापित करा</li>
+            <li>• <strong>डेटा हक्क:</strong> GDPR अनुपालन डेटा हक्क</li>
+          </ul>
+        </div>
+        
+        <div class="glass-card p-8">
+          <h3 class="text-2xl font-bold text-green-800 mb-4">🛡️ सुरक्षा प्रमाणपत्रे</h3>
+          <ul class="space-y-3 text-gray-700">
+            <li>• <strong>ISO 27001:</strong> माहिती सुरक्षा प्रमाणपत्र</li>
+            <li>• <strong>SOC 2 Type II:</strong> सुरक्षा ऑडिट प्रमाणपत्र</li>
+            <li>• <strong>GDPR अनुपालन:</strong> युरोपियन डेटा संरक्षण</li>
+            <li>• <strong>पेन टेस्टिंग:</strong> नियमित सुरक्षा तपासणी</li>
+            <li>• <strong>एन्क्रिप्शन:</strong> AES-256-GCM एन्क्रिप्शन</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Technology Section -->
+  <section id="ai" class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">AI तंत्रज्ञान</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="glass-card p-8">
+        <h3 class="text-2xl font-bold text-green-800 mb-4">🤖 AI शिफारसी</h3>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-semibold text-green-700">पीक शिफारसी</h4>
+            <p class="text-sm text-gray-600">माती, हवामान आणि बाजार डेटावर आधारित पीक शिफारसी</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-green-700">रोग ओळखणे</h4>
+            <p class="text-sm text-gray-600">छायाचित्रांवरून रोग ओळखणे आणि उपाय सुचवणे</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-green-700">सिंचन सल्ला</h4>
+            <p class="text-sm text-gray-600">माती आर्द्रता आणि हवामानावर आधारित सिंचन सल्ला</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-green-700">उत्पादन अंदाज</h4>
+            <p class="text-sm text-gray-600">ऐतिहासिक डेटा आणि वर्तमान परिस्थितीवर आधारित अंदाज</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="glass-card p-8">
+        <h3 class="text-2xl font-bold text-green-800 mb-4">📊 AI पारदर्शकता</h3>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-semibold text-green-700">निर्णय स्पष्टीकरण</h4>
+            <p class="text-sm text-gray-600">प्रत्येक AI निर्णयाचे स्पष्टीकरण आणि कारणे</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-green-700">विश्वास स्कोअर</h4>
+            <p class="text-sm text-gray-600">AI निर्णयांचा विश्वास स्कोअर आणि अचूकता</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-green-700">पक्षपाती तपासणी</h4>
+            <p class="text-sm text-gray-600">AI मॉडेलमधील पक्षपाती तपासणी आणि निराकरण</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-green-700">वापरकर्ता अभिप्राय</h4>
+            <p class="text-sm text-gray-600">AI शिफारसींवर वापरकर्त्यांचे अभिप्राय आणि सुधारणा</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="max-w-4xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">वापरकर्त्यांचे अभिप्राय</h2>
+    <div class="swiper testimonial-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide testimonial text-center p-8 glass-card">
+          "AI Krishi मुळे माझ्या शेतात उत्पादन 40% वाढले आणि खर्च 25% कमी झाला. AI शिफारसी खूप अचूक आहेत!"<br>
+          <span class="testimonial-author">- रामचंद्र पाटील, शेतकरी, नाशिक</span>
+        </div>
+        <div class="swiper-slide testimonial text-center p-8 glass-card">
+          "पारदर्शकता आणि विश्वास हे AI Krishi चे सर्वात मोठे वैशिष्ट्य आहे. प्रत्येक निर्णयाचे स्पष्टीकरण मिळते."<br>
+          <span class="testimonial-author">- सुमन देशमुख, समन्वयक, पुणे</span>
+        </div>
+        <div class="swiper-slide testimonial text-center p-8 glass-card">
+          "IoT सेन्सर आणि रिअल-टाइम अलर्ट्स मुळे शेती व्यवस्थापन खूप सोपे झाले. 24x7 सपोर्ट उत्कृष्ट आहे!"<br>
+          <span class="testimonial-author">- विजय शिंदे, प्रशासक, मुंबई</span>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.testimonial-swiper', {
+          loop: true,
+          autoplay: { delay: 5000, disableOnInteraction: false },
+          pagination: { el: '.swiper-pagination', clickable: true },
+        });
+      });
+    </script>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="bg-green-900 text-white py-16 px-4 animate__animated animate__fadeInUp">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-extrabold mb-6">सुरुवात करा</h2>
+      <p class="text-xl mb-8">भारताच्या सर्वात विश्वसनीय कृषी तंत्रज्ञान प्लॅटफॉर्मसह आपल्या शेतीला डिजिटल बनवा</p>
+      <div class="flex flex-col md:flex-row gap-4 justify-center mb-8">
+        <a href="mailto:info@aikrishi.com" class="bg-white text-green-700 font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-green-100 transition text-lg">ईमेल करा</a>
+        <a href="tel:+919850338825" class="bg-green-700 text-white font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-green-600 transition text-lg">फोन करा</a>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 mt-12">
+        <div>
+          <h3 class="font-bold text-lg mb-2">संपर्क</h3>
+          <p>info@aikrishi.com</p>
+          <p>+91 9850338825</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-2">पत्ता</h3>
+          <p>महाराष्ट्र, भारत</p>
+          <p>AI Krishi Technologies</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-2">सोशल मीडिया</h3>
+          <div class="flex justify-center gap-4 mt-2">
+            <a href="#" class="hover:text-green-300">Facebook</a>
+            <a href="#" class="hover:text-green-300">Twitter</a>
+            <a href="#" class="hover:text-green-300">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-950 text-white py-8 text-center">
+    <div class="max-w-4xl mx-auto">
+      <p class="mb-2">&copy; 2024 AI Krishi. सर्व हक्क राखीव.</p>
+      <p class="text-sm mb-4">भारताच्या भविष्याच्या शेतीसाठी सर्वात विश्वसनीय तंत्रज्ञान</p>
+      <div class="flex justify-center gap-4 text-sm">
+        <a href="#" class="hover:text-green-300">गोपनीयता धोरण</a>
+        <a href="#" class="hover:text-green-300">वापरण्याच्या अटी</a>
+        <a href="#" class="hover:text-green-300">सहाय्य</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuLinks = `
+        <a href="#home" class="nav-link active">मुख्यपृष्ठ</a>
+        <a href="#features" class="nav-link">वैशिष्ट्ये</a>
+        <a href="#trust" class="nav-link">विश्वास</a>
+        <a href="#ai" class="nav-link">AI तंत्रज्ञान</a>
+        <a href="#contact" class="nav-link">संपर्क</a>
+      `;
+      mobileMenu.innerHTML = menuLinks;
+      menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      mobileMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

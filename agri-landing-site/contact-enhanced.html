@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>संपर्क - AI Krishi: आमच्याशी संपर्क साधा</title>
+  <meta name="description" content="AI Krishi शी संपर्क साधा. आमची संपर्क माहिती, सपोर्ट, आणि प्लॅटफॉर्म प्रवेश.">
+  <meta name="keywords" content="AI Krishi, संपर्क, सपोर्ट, कृषी तंत्रज्ञान, संपर्क माहिती">
+  <meta property="og:title" content="संपर्क - AI Krishi">
+  <meta property="og:description" content="AI Krishi शी संपर्क साधा. आमची संपर्क माहिती, सपोर्ट, आणि प्लॅटफॉर्म प्रवेश.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aikrishi.com/contact.html">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <link rel="canonical" href="https://aikrishi.com/contact.html">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
+  <style>
+    body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; }
+    .nav-link { transition: color 0.2s, border-bottom 0.2s; }
+    .nav-link.active, .nav-link:hover { color: #16a34a; border-bottom: 2px solid #16a34a; }
+    .glass-card {
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.18);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34,197,94,0.12);
+    }
+    .contact-icon {
+      font-size: 2rem;
+      color: #16a34a;
+      margin-bottom: 0.5rem;
+    }
+    .mobile-menu {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .desktop-menu { display: none; }
+      .mobile-menu { display: flex; flex-direction: column; gap: 1rem; position: absolute; top: 60px; left: 0; width: 100%; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.08); z-index: 100; padding: 1rem 0; }
+      .mobile-menu a { color: #166534; font-weight: 600; font-size: 1.1rem; padding: 0.5rem 1.5rem; }
+      .mobile-menu a.active, .mobile-menu a:hover { color: #16a34a; border-bottom: 2px solid #16a34a; }
+    }
+    .contact-form input, .contact-form textarea {
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      transition: border-color 0.2s;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      border-color: #16a34a;
+      outline: none;
+    }
+  </style>
+</head>
+<body class="bg-green-50 text-gray-900">
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center">
+    <a href="index-enhanced.html" class="text-2xl font-extrabold text-green-700 tracking-tight">AI Krishi</a>
+    <button id="menu-toggle" class="block md:hidden text-green-700 focus:outline-none" aria-label="Open menu">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="desktop-menu hidden md:flex gap-6 text-lg font-semibold">
+      <li><a href="index-enhanced.html" class="nav-link">मुख्यपृष्ठ</a></li>
+      <li><a href="about-enhanced.html" class="nav-link">आमच्याबद्दल</a></li>
+      <li><a href="features.html" class="nav-link">वैशिष्ट्ये</a></li>
+      <li><a href="contact-enhanced.html" class="nav-link active">संपर्क</a></li>
+    </ul>
+    <div id="mobile-menu" class="mobile-menu absolute left-0 w-full bg-white shadow-md hidden flex-col items-center md:hidden"></div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-green-700 to-green-400 text-white py-16 px-4 text-center animate__animated animate__fadeInDown">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">संपर्क साधा</h1>
+    <p class="text-lg md:text-2xl mb-2">AI Krishi शी संपर्क साधा आणि आपल्या शेतीला डिजिटल बनवा</p>
+    <p class="text-lg">24x7 सपोर्ट, तंत्रज्ञान सल्ला, आणि प्लॅटफॉर्म प्रवेश</p>
+  </section>
+
+  <!-- Contact Information -->
+  <section class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">संपर्क माहिती</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="glass-card p-8 text-center">
+        <div class="contact-icon">📧</div>
+        <h3 class="text-xl font-bold text-green-800 mb-4">ईमेल</h3>
+        <p class="text-gray-700 mb-2">मुख्य संपर्क</p>
+        <a href="mailto:info@aikrishi.com" class="text-green-600 font-semibold hover:text-green-700">info@aikrishi.com</a>
+        <p class="text-gray-700 mb-2 mt-4">तंत्रज्ञान सपोर्ट</p>
+        <a href="mailto:support@aikrishi.com" class="text-green-600 font-semibold hover:text-green-700">support@aikrishi.com</a>
+        <p class="text-gray-700 mb-2 mt-4">व्यवसाय संपर्क</p>
+        <a href="mailto:business@aikrishi.com" class="text-green-600 font-semibold hover:text-green-700">business@aikrishi.com</a>
+      </div>
+      
+      <div class="glass-card p-8 text-center">
+        <div class="contact-icon">📞</div>
+        <h3 class="text-xl font-bold text-green-800 mb-4">फोन</h3>
+        <p class="text-gray-700 mb-2">मुख्य कार्यालय</p>
+        <a href="tel:+919850338825" class="text-green-600 font-semibold hover:text-green-700">+91 9850338825</a>
+        <p class="text-gray-700 mb-2 mt-4">सपोर्ट हेल्पलाइन</p>
+        <a href="tel:+919876543210" class="text-green-600 font-semibold hover:text-green-700">+91 9876543210</a>
+        <p class="text-gray-700 mb-2 mt-4">व्यवसाय संपर्क</p>
+        <a href="tel:+919876543211" class="text-green-600 font-semibold hover:text-green-700">+91 9876543211</a>
+      </div>
+      
+      <div class="glass-card p-8 text-center">
+        <div class="contact-icon">📍</div>
+        <h3 class="text-xl font-bold text-green-800 mb-4">पत्ता</h3>
+        <p class="text-gray-700 mb-2">मुख्य कार्यालय</p>
+        <p class="text-green-600 font-semibold">AI Krishi Technologies</p>
+        <p class="text-gray-600">महाराष्ट्र, भारत</p>
+        <p class="text-gray-600">PIN: 411001</p>
+        <p class="text-gray-700 mb-2 mt-4">कार्य वेळ</p>
+        <p class="text-green-600 font-semibold">सोमवार - शनिवार</p>
+        <p class="text-gray-600">सकाळ 9:00 - संध्याकाळ 6:00</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Access -->
+  <section class="bg-green-100 py-16 px-4 animate__animated animate__fadeInUp">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">प्लॅटफॉर्म प्रवेश</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="glass-card p-8 text-center">
+          <div class="contact-icon">💻</div>
+          <h3 class="text-2xl font-bold text-green-800 mb-4">वेब अ‍ॅप</h3>
+          <p class="text-gray-700 mb-6">संपूर्ण वैशिष्ट्ये वापरण्यासाठी वेब अ‍ॅप वापरा</p>
+          <a href="https://app.aikrishi.com" class="bg-green-700 text-white font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-green-600 transition inline-block">वेब अ‍ॅप वापरा</a>
+          <div class="mt-4 text-sm text-gray-600">
+            <p>• सर्व ब्राउझर सपोर्ट</p>
+            <p>• रिअल-टाइम डेटा</p>
+            <p>• पूर्ण डॅशबोर्ड</p>
+          </div>
+        </div>
+        
+        <div class="glass-card p-8 text-center">
+          <div class="contact-icon">📱</div>
+          <h3 class="text-2xl font-bold text-green-800 mb-4">मोबाइल अ‍ॅप</h3>
+          <p class="text-gray-700 mb-6">आपल्या स्मार्टफोनवर AI Krishi वापरा</p>
+          <div class="flex flex-col md:flex-row gap-4 justify-center mb-4">
+            <a href="#" class="bg-black text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:bg-gray-800 transition">Google Play</a>
+            <a href="#" class="bg-black text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:bg-gray-800 transition">App Store</a>
+          </div>
+          <div class="text-sm text-gray-600">
+            <p>• Android आणि iOS</p>
+            <p>• ऑफलाइन कार्यक्षमता</p>
+            <p>• पुश सूचना</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support Options -->
+  <section class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">सपोर्ट पर्याय</h2>
+    <div class="grid md:grid-cols-4 gap-8">
+      <div class="glass-card p-6 text-center">
+        <div class="contact-icon">🆘</div>
+        <h3 class="text-lg font-bold text-green-800 mb-2">24x7 सपोर्ट</h3>
+        <p class="text-sm text-gray-600">कधीही मदतीसाठी आमचा सपोर्ट उपलब्ध</p>
+      </div>
+      
+      <div class="glass-card p-6 text-center">
+        <div class="contact-icon">📚</div>
+        <h3 class="text-lg font-bold text-green-800 mb-2">प्रशिक्षण</h3>
+        <p class="text-sm text-gray-600">वापरकर्त्यांना प्रशिक्षण आणि मार्गदर्शन</p>
+      </div>
+      
+      <div class="glass-card p-6 text-center">
+        <div class="contact-icon">🔧</div>
+        <h3 class="text-lg font-bold text-green-800 mb-2">तांत्रिक सपोर्ट</h3>
+        <p class="text-sm text-gray-600">तंत्रज्ञान समस्यांचे निराकरण</p>
+      </div>
+      
+      <div class="glass-card p-6 text-center">
+        <div class="contact-icon">💡</div>
+        <h3 class="text-lg font-bold text-green-800 mb-2">सल्ला</h3>
+        <p class="text-sm text-gray-600">शेती आणि तंत्रज्ञान सल्ला</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="max-w-4xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <div class="glass-card p-8">
+      <h2 class="text-2xl font-bold text-green-800 mb-6 text-center">संपर्क फॉर्म</h2>
+      <form class="contact-form space-y-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">नाव</label>
+            <input type="text" class="w-full" placeholder="आपले पूर्ण नाव" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">फोन नंबर</label>
+            <input type="tel" class="w-full" placeholder="+91 9876543210" required>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">ईमेल</label>
+          <input type="email" class="w-full" placeholder="your@email.com" required>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">विषय</label>
+          <select class="w-full border-2 border-gray-200 rounded-lg p-3 focus:border-green-500">
+            <option>सामान्य प्रश्न</option>
+            <option>तंत्रज्ञान सपोर्ट</option>
+            <option>व्यवसाय संपर्क</option>
+            <option>प्रशिक्षण</option>
+            <option>इतर</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">संदेश</label>
+          <textarea rows="5" class="w-full" placeholder="आपला संदेश येथे लिहा..." required></textarea>
+        </div>
+        
+        <div class="text-center">
+          <button type="submit" class="bg-green-700 text-white font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-green-600 transition">संदेश पाठवा</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Social Media -->
+  <section class="bg-green-100 py-16 px-4 animate__animated animate__fadeInUp">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-extrabold mb-8 text-green-800">सोशल मीडिया</h2>
+      <p class="text-lg text-gray-700 mb-8">आमच्याशी सोशल मीडियावर संपर्क साधा</p>
+      <div class="flex justify-center gap-8">
+        <a href="#" class="bg-blue-600 text-white p-4 rounded-full hover:bg-blue-700 transition">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/>
+          </svg>
+        </a>
+        <a href="#" class="bg-blue-400 text-white p-4 rounded-full hover:bg-blue-500 transition">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 0 0-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.938-.856 2.021-.857 3.17 0 2.188 1.115 4.116 2.823 5.247a4.904 4.904 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 0 1-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 0 1 0 21.543a13.94 13.94 0 0 0 7.548 2.209c9.058 0 14.009-7.513 14.009-14.009 0-.213-.005-.425-.014-.636A10.012 10.012 0 0 0 24 4.557z"/>
+          </svg>
+        </a>
+        <a href="#" class="bg-blue-700 text-white p-4 rounded-full hover:bg-blue-800 transition">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.381-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.599v5.597z"/>
+          </svg>
+        </a>
+        <a href="#" class="bg-red-600 text-white p-4 rounded-full hover:bg-red-700 transition">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-900 text-white py-8 text-center">
+    <div class="max-w-4xl mx-auto">
+      <p class="mb-2">&copy; 2024 AI Krishi. सर्व हक्क राखीव.</p>
+      <p class="text-sm mb-4">भारताच्या भविष्याच्या शेतीसाठी सर्वात विश्वसनीय तंत्रज्ञान</p>
+      <div class="flex justify-center gap-4 text-sm">
+        <a href="#" class="hover:text-green-300">गोपनीयता धोरण</a>
+        <a href="#" class="hover:text-green-300">वापरण्याच्या अटी</a>
+        <a href="#" class="hover:text-green-300">सहाय्य</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuLinks = `
+        <a href="index-enhanced.html" class="nav-link">मुख्यपृष्ठ</a>
+        <a href="about-enhanced.html" class="nav-link">आमच्याबद्दल</a>
+        <a href="features.html" class="nav-link">वैशिष्ट्ये</a>
+        <a href="contact-enhanced.html" class="nav-link active">संपर्क</a>
+      `;
+      mobileMenu.innerHTML = menuLinks;
+      menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      mobileMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

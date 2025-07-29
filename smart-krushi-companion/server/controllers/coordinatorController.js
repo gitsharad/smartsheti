@@ -149,30 +149,41 @@ const getFieldOverview = async (req, res) => {
       owner: { $in: farmerIds } 
     });
     
-    // Process field data
+    // Process field data using latest field structure
     const fieldsWithStatus = fields.map(field => {
       let status = 'Good';
       let moistureStatus = 'Normal';
       let temperatureStatus = 'Normal';
       
-      // Check sensor data for status
-      if (field.lastSensorData) {
-        const { moisture, temperature } = field.lastSensorData;
-        
-        if (moisture < 30) {
-          moistureStatus = 'Low';
-          status = 'Alert';
-        } else if (moisture > 80) {
-          moistureStatus = 'High';
-          status = 'Warning';
+      // Check sensor data for status using latest sensor structure
+      const activeSensors = field.sensors?.filter(s => s.status === 'active') || [];
+      const moistureSensors = activeSensors.filter(s => s.type === 'moisture');
+      const temperatureSensors = activeSensors.filter(s => s.type === 'temperature');
+      
+      // Check latest sensor readings
+      if (moistureSensors.length > 0) {
+        const latestMoisture = moistureSensors[0].lastReading?.value;
+        if (latestMoisture !== undefined) {
+          if (latestMoisture < 30) {
+            moistureStatus = 'Low';
+            status = 'Alert';
+          } else if (latestMoisture > 80) {
+            moistureStatus = 'High';
+            status = 'Warning';
+          }
         }
-        
-        if (temperature > 35) {
-          temperatureStatus = 'High';
-          status = 'Alert';
-        } else if (temperature < 10) {
-          temperatureStatus = 'Low';
-          status = 'Warning';
+      }
+      
+      if (temperatureSensors.length > 0) {
+        const latestTemperature = temperatureSensors[0].lastReading?.value;
+        if (latestTemperature !== undefined) {
+          if (latestTemperature > 35) {
+            temperatureStatus = 'High';
+            status = 'Alert';
+          } else if (latestTemperature < 10) {
+            temperatureStatus = 'Low';
+            status = 'Warning';
+          }
         }
       }
       
@@ -180,7 +191,11 @@ const getFieldOverview = async (req, res) => {
         ...field.toObject(),
         status,
         moistureStatus,
-        temperatureStatus
+        temperatureStatus,
+        cropName: field.currentCrop?.name || 'No crop',
+        cropStatus: field.currentCrop?.status || 'planning',
+        sensorCount: field.sensors?.length || 0,
+        activeSensorCount: activeSensors.length
       };
     });
     

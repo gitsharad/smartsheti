@@ -43,39 +43,27 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, onLogin }) => {
     setLoading(false);
   };
 
-  // Phone/OTP login
+  // Phone/OTP login - Coming Soon
   const handleSendOtp = async () => {
-    if (!phone) {
-      Alert.alert('त्रुटी', 'कृपया फोन नंबर भरा');
-      return;
-    }
-    setLoading(true);
-    try {
-      await api.post('/auth/send-otp', { phone });
-      setOtpSent(true);
-      Alert.alert('यशस्वी', 'OTP पाठवले गेले');
-    } catch (err: any) {
-      Alert.alert('त्रुटी', err?.response?.data?.message?.english || 'अज्ञात त्रुटी');
-    }
-    setLoading(false);
+    Alert.alert(
+      'लवकरच येणार आहे! 🚀',
+      'मोबाईल OTP लॉगिन पुढील आवृत्तीत उपलब्ध होईल. सध्या कृपया ईमेल लॉगिन वापरा.',
+      [
+        { text: 'ईमेल लॉगिन वापरा', onPress: () => setTab('email') },
+        { text: 'ठीक आहे', style: 'cancel' }
+      ]
+    );
   };
   
   const handleVerifyOtp = async () => {
-    if (!otp) {
-      Alert.alert('त्रुटी', 'कृपया OTP भरा');
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await api.post('/auth/verify-otp', { phone, otp });
-      await saveToken('accessToken', res.data.accessToken);
-      await saveToken('refreshToken', res.data.refreshToken);
-      Alert.alert('यशस्वी', 'लॉगिन यशस्वी झाले');
-      onLogin();
-    } catch (err: any) {
-      Alert.alert('त्रुटी', err?.response?.data?.message?.english || 'अज्ञात त्रुटी');
-    }
-    setLoading(false);
+    Alert.alert(
+      'लवकरच येणार आहे! 🚀',
+      'मोबाईल OTP लॉगिन पुढील आवृत्तीत उपलब्ध होईल. सध्या कृपया ईमेल लॉगिन वापरा.',
+      [
+        { text: 'ईमेल लॉगिन वापरा', onPress: () => setTab('email') },
+        { text: 'ठीक आहे', style: 'cancel' }
+      ]
+    );
   };
 
   return (
@@ -178,53 +166,36 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, onLogin }) => {
             </View>
           ) : (
             <View style={styles.form}>
-              {/* Phone Input */}
-              <View style={styles.inputContainer}>
-                <Feather name="phone" size={20} color="#22c55e" style={styles.inputIcon} />
-                <TextInput 
-                  style={styles.input} 
-                  placeholder="फोन नंबर" 
-                  value={phone} 
-                  onChangeText={setPhone} 
-                  keyboardType="phone-pad"
-                  placeholderTextColor="#9ca3af"
-                />
-              </View>
-
-              {/* OTP Input */}
-              {otpSent && (
-                <View style={styles.inputContainer}>
-                  <Feather name="shield" size={20} color="#22c55e" style={styles.inputIcon} />
-                  <TextInput 
-                    style={styles.input} 
-                    placeholder="OTP कोड" 
-                    value={otp} 
-                    onChangeText={setOtp} 
-                    keyboardType="number-pad"
-                    placeholderTextColor="#9ca3af"
-                  />
+              {/* Coming Soon Message */}
+              <View style={styles.comingSoonContainer}>
+                <MaterialCommunityIcons name="cellphone-message" size={60} color="#22c55e" />
+                <Text style={styles.comingSoonTitle}>मोबाईल OTP लॉगिन</Text>
+                <Text style={styles.comingSoonSubtitle}>लवकरच येणार आहे!</Text>
+                <Text style={styles.comingSoonDescription}>
+                  आम्ही तुम्हाला सुरक्षित मोबाईल OTP लॉगिन आणत आहोत. हे वैशिष्ट्य पुढील आवृत्तीत उपलब्ध होईल.
+                </Text>
+                <View style={styles.comingSoonFeatures}>
+                  <View style={styles.featureItem}>
+                    <Feather name="shield" size={16} color="#22c55e" />
+                    <Text style={styles.featureText}>सुरक्षित SMS-आधारित प्रमाणीकरण</Text>
+                  </View>
+                  <View style={styles.featureItem}>
+                    <Feather name="smartphone" size={16} color="#22c55e" />
+                    <Text style={styles.featureText}>त्वरित एक-टॅप लॉगिन</Text>
+                  </View>
+                  <View style={styles.featureItem}>
+                    <Feather name="lock" size={16} color="#22c55e" />
+                    <Text style={styles.featureText}>वाढीव सुरक्षा</Text>
+                  </View>
                 </View>
-              )}
-
-              {/* Send/Verify OTP Button */}
-              <TouchableOpacity 
-                style={[styles.loginButton, loading && styles.loginButtonDisabled]} 
-                onPress={otpSent ? handleVerifyOtp : handleSendOtp} 
-                disabled={loading}
-              >
-                {loading ? (
-                  <Text style={styles.loginButtonText}>
-                    {otpSent ? 'सत्यापन करत आहे...' : 'OTP पाठवत आहे...'}
-                  </Text>
-                ) : (
-                  <>
-                    <Feather name={otpSent ? "check-circle" : "send"} size={20} color="#fff" />
-                    <Text style={styles.loginButtonText}>
-                      {otpSent ? 'OTP सत्यापित करा' : 'OTP पाठवा'}
-                    </Text>
-                  </>
-                )}
-              </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.useEmailButton} 
+                  onPress={() => setTab('email')}
+                >
+                  <Feather name="mail" size={20} color="#fff" />
+                  <Text style={styles.useEmailButtonText}>ईमेल लॉगिन वापरा</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
 
@@ -432,6 +403,70 @@ const styles = StyleSheet.create({
   debugButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  comingSoonContainer: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f9fafb',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    marginBottom: 24,
+  },
+  comingSoonTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#166534',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  comingSoonSubtitle: {
+    fontSize: 18,
+    color: '#22c55e',
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  comingSoonDescription: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 22,
+  },
+  comingSoonFeatures: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 24,
+    width: '100%',
+  },
+  featureItem: {
+    alignItems: 'center',
+  },
+  featureText: {
+    fontSize: 14,
+    color: '#374151',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  useEmailButton: {
+    backgroundColor: '#22c55e',
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    shadowColor: '#22c55e',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  useEmailButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
 

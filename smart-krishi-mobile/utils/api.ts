@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken, saveToken, deleteToken } from './secureStore';
 import { authEvents } from './authEvents';
 
-export const API_BASE_URL = 'https://e60024e5f191.ngrok-free.app/api/v1';
+export const API_BASE_URL = 'https://871b0c5cb80c.ngrok-free.app/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

@@ -1,28 +1,35 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL +'/api/v1';
+// Use full backend URL for development to avoid proxy issues
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? (process.env.REACT_APP_API_URL + '/api/v1')
+  : 'http://localhost:5000/api/v1';
 
 // Create axios instance with base URL
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  // Add timeout and better error handling
+  timeout: 10000,
+  withCredentials: false
 });
 
 // Add request interceptor to add token
 api.interceptors.request.use(
   (config) => {
-    // Debug: log the actual request URL
-    console.log('Axios request URL:', config.url);
-    // Only add token for protected endpoints
-   // const publicEndpoints = ['/coordinators', '/api/v1/coordinators', '/api/v1/users/coordinators'];
-   // if (!publicEndpoints.some(url => config.url && config.url.endsWith(url))) {
+    // Check if this is a login request (don't add token for login)
+    const isLoginRequest = config.url === '/auth/login';
+    
+    if (!isLoginRequest) {
       const token = localStorage.getItem('accessToken');
+      
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-  //  }
+    }
+    
     return config;
   },
   (error) => {
@@ -32,15 +39,11 @@ api.interceptors.request.use(
 
 // Add response interceptor to handle token refresh
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
-
-    // Skip refresh logic for public endpoints
-   // const publicEndpoints = ['/coordinators', '/api/v1/coordinators', '/api/v1/users/coordinators'];
-   // if (publicEndpoints.some(url => originalRequest.url && originalRequest.url.endsWith(url))) {
-   //   return Promise.reject(error);
-   // }
 
     // If error is 401 and we haven't tried to refresh token yet
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -48,6 +51,7 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem('refreshToken');
+        
         if (!refreshToken) {
           throw new Error('No refresh token available');
         }
@@ -81,14 +85,44 @@ api.interceptors.response.use(
 );
 
 const authService = {
-  async login(email, password) {
-    const response = await api.post('/auth/login', { email, password });
-    if (response.data.accessToken) {
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+  async testConnection() {
+    try {
+      const response = await axios.get(`${API_URL}/health`);
+      return true;
+    } catch (error) {
+      return false;
     }
-    return response.data;
+  },
+
+  async testToken() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      
+      if (token) {
+        const response = await api.get('/auth/profile');
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  },
+
+  async login(email, password) {
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      
+      if (response.data && response.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
   async register(userData) {
@@ -99,6 +133,20 @@ const authService = {
       localStorage.setItem('user', JSON.stringify(response.data.user));
     }
     return response.data;
+  },
+
+  async mobileOtpRequest(phoneNumber) {
+    return api.post('/auth/mobile-otp-request', { phoneNumber });
+  },
+  async mobileOtpVerify(phoneNumber, otp) {
+    return api.post('/auth/mobile-otp-verify', { phoneNumber, otp }).then(response => {
+      if (response.data && response.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    });
   },
 
   logout() {

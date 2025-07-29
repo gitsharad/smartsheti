@@ -153,16 +153,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation, onRegister 
                   <Text style={styles.registerButtonText}>नोंदणी करा</Text>
                 </>
               )}
-            </TouchableOpacity>
+      </TouchableOpacity>
           </View>
 
           {/* Login Link */}
           <View style={styles.loginSection}>
             <Text style={styles.loginText}>आधीपासून खाते आहे? </Text>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
               <Text style={styles.loginLink}>लॉगिन करा</Text>
-            </TouchableOpacity>
-          </View>
+      </TouchableOpacity>
+    </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

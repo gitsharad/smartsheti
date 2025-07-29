@@ -227,21 +227,26 @@ exports.getFields = async (req, res) => {
     // Populate farmer name (owner or assigned user)
     const fields = await Field.find({})
       .populate({ path: 'owner', select: 'name' })
-      .populate({ path: 'assignedTo', select: 'name' });
-    // Format for frontend
+      .populate({ path: 'assignedTo.user', select: 'name' });
+    
+    // Format for frontend using latest field structure
     const result = fields.map(f => ({
       _id: f._id,
       name: f.name,
-      farmerName: f.owner ? f.owner.name : (f.assignedTo ? f.assignedTo.name : ''),
-      crop: f.cropType || f.crop || '',
-      status: f.status || 'Healthy',
-      lastSensorUpdate: f.lastSensorUpdate || f.updatedAt || f.createdAt,
-      lat: Array.isArray(f.location?.coordinates)
-        ? f.location.coordinates[0]
-        : f.location?.coordinates?.lat,
-      lng: Array.isArray(f.location?.coordinates)
-        ? f.location.coordinates[1]
-        : f.location?.coordinates?.lng
+      fieldId: f.fieldId,
+      farmerName: f.owner ? f.owner.name : (f.assignedTo?.length > 0 ? f.assignedTo[0].user?.name : ''),
+      crop: f.currentCrop?.name || 'No crop',
+      cropStatus: f.currentCrop?.status || 'planning',
+      status: f.status || 'active',
+      lastSensorUpdate: f.updatedAt || f.createdAt,
+      lat: f.location?.coordinates?.lat,
+      lng: f.location?.coordinates?.lng,
+      area: f.location?.area?.value,
+      areaUnit: f.location?.area?.unit,
+      soilType: f.soilInfo?.type,
+      irrigationType: f.irrigation?.type,
+      sensorCount: f.sensors?.length || 0,
+      activeSensors: f.sensors?.filter(s => s.status === 'active').length || 0
     }));
     res.json({ fields: result });
   } catch (err) {

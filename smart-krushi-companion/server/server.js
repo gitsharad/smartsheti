@@ -10,10 +10,12 @@ const { logger, requestLogger } = require('./utils/logger');
 const { 
   standardLimiter, 
   strictLimiter,
+  devLimiter,
   securityHeaders,
   sanitizeRequest,
   errorHandler
 } = require('./utils/security');
+const { advancedSecurityMiddleware } = require('./utils/advancedSecurity');
 const { auth, authorize } = require('./middleware/auth');
 const swaggerSpec = require('./utils/swagger');
 const Field = require('./models/Field');
@@ -32,6 +34,12 @@ const ndviRoutes = require('./routes/ndviRoutes');
 const healthRoutes = require('./routes/healthRoutes');
 const coordinatorRoutes = require('./routes/coordinatorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const aiRecommendationRoutes = require('./routes/aiRecommendationRoutes');
+const gpsMappingRoutes = require('./routes/gpsMappingRoutes');
+const iotSensorRoutes = require('./routes/iotSensorRoutes');
+const trustRoutes = require('./routes/trustRoutes');
 
 // Implement clustering for better performance
 if (cluster.isMaster && process.env.NODE_ENV === 'production') {
@@ -66,7 +74,9 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
   app.use(express.json({ limit: '10mb' }));
   app.use(requestLogger);
 
-  // Security middleware
+  // Enhanced security middleware
+  // app.use(advancedSecurityMiddleware.enhancedSecurityHeaders);
+  // app.use(advancedSecurityMiddleware.encryptSensitiveData);
   app.use(securityHeaders);
   app.use(sanitizeRequest);
 
@@ -86,6 +96,16 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
 
   // Health check endpoint (no authentication)
   app.use('/api/v1/health', healthRoutes);
+
+  // Development endpoint to reset rate limits (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    app.get('/api/v1/dev/reset-rate-limit', (req, res) => {
+      res.json({ 
+        message: 'Rate limit reset endpoint available in development',
+        note: 'Rate limits are automatically more generous in development mode'
+      });
+    });
+  }
 
   // Auth routes (no authentication)
   app.use('/api/v1/auth', authRoutes);
@@ -113,27 +133,35 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
     fs.mkdirSync(uploadsDir);
   }
 
-  // Apply JWT authentication to all routes
+  // Apply enhanced JWT authentication to all routes
   v1Router.use(auth);
 
-  // Apply rate limiting to sensitive endpoints
+  // Apply intelligent rate limiting
+  // v1Router.use(advancedSecurityMiddleware.intelligentRateLimit);
+
+  // Apply strict rate limiting to sensitive endpoints
   v1Router.use('/ndvi', strictLimiter);
   v1Router.use('/disease', strictLimiter);
-
-  // Apply general rate limiting to all other routes
-  v1Router.use(standardLimiter);
 
   // Apply routes to v1 router with role-based authorization
   v1Router.use('/users', userRoutes);
   v1Router.use('/fields', fieldRoutes);
   v1Router.use('/coordinator', coordinatorRoutes);
   v1Router.use('/admin', adminRoutes);
+  v1Router.use('/analytics', authorize('superadmin', 'admin', 'coordinator', 'farmer'), analyticsRoutes);
+  v1Router.use('/notifications', authorize('superadmin', 'admin', 'coordinator', 'farmer'), notificationRoutes);
   v1Router.use('/sensor-data', authorize('superadmin', 'admin', 'coordinator', 'farmer'), sensorRoutes);
   v1Router.use('/ndvi', authorize('superadmin', 'admin', 'coordinator', 'farmer'), ndviRoutes);
   v1Router.use('/land', authorize('superadmin', 'admin', 'coordinator', 'farmer'), landRoutes);
   v1Router.use('/chatbot', authorize('superadmin', 'admin', 'coordinator', 'farmer'), chatbotRoutes);
   v1Router.use('/disease', authorize('superadmin', 'admin', 'coordinator', 'farmer'), diseaseRoutes);
   v1Router.use('/fdss', authorize('superadmin', 'admin', 'coordinator', 'farmer'), fdssRoutes);
+  v1Router.use('/ai-recommendations', authorize('superadmin', 'admin', 'coordinator', 'farmer'), aiRecommendationRoutes);
+  v1Router.use('/gps-mapping', authorize('superadmin', 'admin', 'coordinator', 'farmer'), gpsMappingRoutes);
+  v1Router.use('/iot-sensors', authorize('superadmin', 'admin', 'coordinator', 'farmer'), iotSensorRoutes);
+  
+  // Trust routes - accessible to all authenticated users
+  v1Router.use('/trust', authorize('superadmin', 'admin', 'coordinator', 'farmer'), trustRoutes);
 
   // Mount v1 router
   app.use('/api/v1', v1Router);

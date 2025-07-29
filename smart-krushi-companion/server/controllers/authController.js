@@ -3,20 +3,25 @@ const RefreshToken = require('../models/RefreshToken');
 const { logger } = require('../utils/logger');
 const crypto = require('crypto');
 const { sendEmail } = require('../utils/emailService');
+const { sendSMSAlert } = require('../utils/alertService');
 
 // Helper function to create tokens
 const createTokens = async (user, req) => {
   const accessToken = user.generateAuthToken();
   const refreshToken = user.generateRefreshToken();
 
-  // Save refresh token
-  await RefreshToken.create({
-    token: refreshToken,
-    user: user._id,
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-    userAgent: req.headers['user-agent'],
-    ipAddress: req.ip
-  });
+  // Save refresh token (handle duplicate key error gracefully)
+  try {
+    await RefreshToken.create({
+      token: refreshToken,
+      user: user._id,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      userAgent: req.headers['user-agent'],
+      ipAddress: req.ip
+    });
+  } catch (err) {
+    if (err.code !== 11000) throw err; // Ignore duplicate key error
+  }
 
   return { accessToken, refreshToken };
 };
@@ -111,11 +116,14 @@ const register = async (req, res) => {
 // Login user
 const login = async (req, res) => {
   try {
+    logger.info('Login request received', { email: req.body.email });
     const { email, password } = req.body;
 
     // Find user
     const user = await User.findOne({ email });
+    logger.info('User lookup complete', { userFound: !!user });
     if (!user) {
+      logger.warn('User not found', { email });
       return res.status(401).json({
         error: 'Authentication failed',
         message: {
@@ -126,7 +134,9 @@ const login = async (req, res) => {
     }
 
     // Check if user is active
+    logger.info('Checking if user is active', { isActive: user.isActive });
     if (!user.isActive) {
+      logger.warn('User account disabled', { email });
       return res.status(401).json({
         error: 'Account disabled',
         message: {
@@ -137,8 +147,11 @@ const login = async (req, res) => {
     }
 
     // Verify password
+    logger.info('Verifying password');
     const isValidPassword = await user.comparePassword(password);
+    logger.info('Password verification result', { isValidPassword });
     if (!isValidPassword) {
+      logger.warn('Invalid password', { email });
       return res.status(401).json({
         error: 'Authentication failed',
         message: {
@@ -149,11 +162,14 @@ const login = async (req, res) => {
     }
 
     // Generate tokens
+    logger.info('Generating tokens');
     const { accessToken, refreshToken } = await createTokens(user, req);
+    logger.info('Tokens generated');
 
     // Update last login
     user.lastLogin = new Date();
     await user.save();
+    logger.info('User lastLogin updated');
 
     res.json({
       message: {
@@ -164,6 +180,7 @@ const login = async (req, res) => {
       accessToken,
       refreshToken
     });
+    logger.info('Login response sent');
   } catch (error) {
     logger.error('Login error:', error);
     res.status(400).json({
@@ -215,12 +232,19 @@ const refresh = async (req, res) => {
       });
     }
 
-    // Generate new tokens
-    const tokens = await createTokens(user, req);
-
-    // Revoke old refresh token
+    // Revoke old refresh token BEFORE creating new one
     savedToken.isRevoked = true;
     await savedToken.save();
+
+    // Generate new tokens (handle duplicate key error gracefully)
+    let tokens;
+    try {
+      tokens = await createTokens(user, req);
+    } catch (err) {
+      if (err.code !== 11000) throw err; // Ignore duplicate key error
+      // If duplicate, reuse the old token (should not happen, but fallback)
+      tokens = { accessToken: user.generateAuthToken(), refreshToken: refreshToken };
+    }
 
     res.json({
       message: {
@@ -389,6 +413,104 @@ const logout = async (req, res) => {
   }
 };
 
+// In-memory OTP store (for demo; use Redis or DB in production)
+const otpStore = {};
+
+// Mobile OTP request
+const mobileOtpRequest = async (req, res) => {
+  try {
+    const { phoneNumber } = req.body;
+    if (!phoneNumber) {
+      return res.status(400).json({ error: 'Phone number required' });
+    }
+    
+    // Find user
+    const user = await User.findOne({ phoneNumber, isActive: true });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found or inactive' });
+    }
+    
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStore[phoneNumber] = { otp, expires: Date.now() + 5 * 60 * 1000 };
+    
+    // Send SMS with OTP
+    const message = `Your Smart Krishi OTP is: ${otp}. Valid for 5 minutes.`;
+    
+    // Always log OTP for testing (since SMS is not configured properly)
+    logger.info(`OTP for ${phoneNumber}: ${otp} - Use this OTP for testing`);
+    
+    try {
+      await sendSMSAlert(message, phoneNumber);
+      logger.info(`SMS sent to ${phoneNumber} with OTP: ${otp}`);
+    } catch (smsError) {
+      logger.error('SMS sending failed:', smsError);
+      // SMS failed, but OTP is logged above for testing
+    }
+    
+    res.json({ message: { english: 'OTP sent', marathi: 'ओटीपी पाठवला' } });
+  } catch (error) {
+    logger.error('Mobile OTP request error:', error);
+    res.status(500).json({ error: 'Failed to send OTP' });
+  }
+};
+
+// Mobile OTP verify
+const mobileOtpVerify = async (req, res) => {
+  try {
+    const { phoneNumber, otp } = req.body;
+    if (!phoneNumber || !otp) {
+      return res.status(400).json({ error: 'Phone number and OTP required' });
+    }
+    const record = otpStore[phoneNumber];
+    if (!record || record.otp !== otp || record.expires < Date.now()) {
+      return res.status(401).json({ error: 'Invalid or expired OTP' });
+    }
+    // OTP valid, delete it
+    delete otpStore[phoneNumber];
+    // Find user
+    const user = await User.findOne({ phoneNumber, isActive: true });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found or inactive' });
+    }
+    // Generate tokens
+    const { accessToken, refreshToken } = await createTokens(user, req);
+    user.lastLogin = new Date();
+    await user.save();
+    res.json({
+      message: { english: 'Login successful', marathi: 'लॉगिन यशस्वी' },
+      user,
+      accessToken,
+      refreshToken
+    });
+  } catch (error) {
+    logger.error('Mobile OTP verify error:', error);
+    res.status(500).json({ error: 'OTP verification failed' });
+  }
+};
+
+// Test SMS function (for debugging)
+const testSMS = async (req, res) => {
+  try {
+    const { phoneNumber, message = 'Test SMS from Smart Krishi' } = req.body;
+    if (!phoneNumber) {
+      return res.status(400).json({ error: 'Phone number required' });
+    }
+    
+    try {
+      await sendSMSAlert(message, phoneNumber);
+      logger.info(`Test SMS sent to ${phoneNumber}`);
+      res.json({ success: true, message: 'Test SMS sent successfully' });
+    } catch (smsError) {
+      logger.error('Test SMS failed:', smsError);
+      res.status(500).json({ error: 'SMS sending failed', details: smsError.message });
+    }
+  } catch (error) {
+    logger.error('Test SMS error:', error);
+    res.status(500).json({ error: 'Test SMS failed' });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -397,5 +519,8 @@ module.exports = {
   resetPassword,
   logout,
   getProfile: require('./profileController').getProfile,
-  updateProfile: require('./profileController').updateProfile
+  updateProfile: require('./profileController').updateProfile,
+  mobileOtpRequest,
+  mobileOtpVerify,
+  testSMS
 }; 

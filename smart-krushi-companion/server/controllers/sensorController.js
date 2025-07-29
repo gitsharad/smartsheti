@@ -109,6 +109,33 @@ async function checkAndSendAlerts(fieldId, moisture, temperature, deviceId, loca
 exports.getLatestSensorData = async (req, res) => {
   try {
     const { fieldId } = req.query;
+    
+    // Validate field access
+    const Field = require('../models/Field');
+    const field = await Field.findOne({ fieldId });
+    
+    if (!field) {
+      return res.status(404).json({
+        error: 'Field not found',
+        message: {
+          english: 'Field not found',
+          marathi: 'शेत सापडले नाही'
+        }
+      });
+    }
+
+    // Check if user has access to this field
+    const canAccess = field.canUserAccess(req.user._id, req.user.role);
+    if (!canAccess) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: {
+          english: 'You do not have permission to access this field',
+          marathi: 'तुम्हाला या शेतावर प्रवेश करण्याची परवानगी नाही'
+        }
+      });
+    }
+
     const latest = await SensorData.findOne({ fieldId }).sort({ timestamp: -1 });
     console.log(latest); 
     if (!latest) {
@@ -137,10 +164,37 @@ exports.getLatestSensorData = async (req, res) => {
 exports.getSensorData24h = async (req, res) => {
   try {
     const { fieldId } = req.query;
+    
+    // Validate field access
+    const Field = require('../models/Field');
+    const field = await Field.findOne({ fieldId });
+    
+    if (!field) {
+      return res.status(404).json({
+        error: 'Field not found',
+        message: {
+          english: 'Field not found',
+          marathi: 'शेत सापडले नाही'
+        }
+      });
+    }
+
+    // Check if user has access to this field
+    const canAccess = field.canUserAccess(req.user._id, req.user.role);
+    if (!canAccess) {
+      return res.status(403).json({
+        error: 'Access denied',
+        message: {
+          english: 'You do not have permission to access this field',
+          marathi: 'तुम्हाला या शेतावर प्रवेश करण्याची परवानगी नाही'
+        }
+      });
+    }
+
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const data = await SensorData.find({ 
       fieldId, 
-      
+      timestamp: { $gte: since }
     }).sort({ timestamp: 1 });
 
     // Return 200 with empty array and message if no data

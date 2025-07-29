@@ -5,6 +5,7 @@ import api from '../utils/api';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define the navigation stack param list
 type RootStackParamList = {
@@ -12,14 +13,50 @@ type RootStackParamList = {
   // ...other routes if needed
 };
 
+interface Field {
+  fieldId: string;
+  name: string;
+}
+
 const FDSS = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [field, setField] = useState('plot1');
+  const [field, setField] = useState('');
+  const [fields, setFields] = useState<Field[]>([]);
+  const [fieldsLoading, setFieldsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState<any>(null);
   const [insights, setInsights] = useState<any[]>([]);
 
+  // Fetch farmer's assigned fields
+  const fetchFarmerFields = async () => {
+    setFieldsLoading(true);
+    try {
+      const response = await api.get('/fields');
+      const userFields = response.data.fields || [];
+      setFields(userFields);
+
+      // Set the first field as default if available
+      if (userFields.length > 0) {
+        setField(userFields[0].fieldId);
+      }
+    } catch (error: any) {
+      console.error('Error fetching fields:', error);
+      // Fallback to hardcoded fields if API fails (for development/testing)
+      const fallbackFields = [
+        { fieldId: 'plot1', name: 'Plot 1' },
+        { fieldId: 'plot2', name: 'Plot 2' },
+        { fieldId: 'plot3', name: 'Plot 3' }
+      ];
+      setFields(fallbackFields);
+      setField('plot1');
+    } finally {
+      setFieldsLoading(false);
+    }
+  };
+
   const fetchData = async (selectedField: string) => {
+    if (!selectedField) return;
+    
     setLoading(true);
     try {
       const [weatherRes, insightsRes] = await Promise.all([
@@ -38,12 +75,20 @@ const FDSS = () => {
     }
   };
 
+  // Load fields on component mount
   useEffect(() => {
-    fetchData(field);
+    fetchFarmerFields();
+  }, []);
+
+  // Fetch insights and weather when field changes
+  useEffect(() => {
+    if (field) {
+      fetchData(field);
+    }
   }, [field]);
 
   const resetState = () => {
-    setField('plot1');
+    setField('');
     setWeather(null);
     setInsights([]);
     setLoading(false);
@@ -81,61 +126,95 @@ const FDSS = () => {
         <MaterialCommunityIcons name="lightbulb-on-outline" size={28} color="#facc15" style={{ marginRight: 8 }} />
         <Text style={styles.header}>शेत निर्णय समर्थन प्रणाली</Text>
       </View>
+      
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>शेत निवडा</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={field}
-            style={styles.picker}
-            onValueChange={(itemValue) => setField(itemValue)}>
-            <Picker.Item label="शेत १ (Plot 1)" value="plot1" />
-            <Picker.Item label="शेत २ (Plot 2)" value="plot2" />
-            <Picker.Item label="शेत ३ (Plot 3)" value="plot3" />
-          </Picker>
-        </View>
-      </View>
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>हवामान माहिती</Text>
-        {loading ? <ActivityIndicator size="small" color="#22c55e" /> : weather ? (
-          <View style={styles.weatherRow}>
-            <View style={styles.weatherCard}>
-              <View style={[styles.weatherIconCircle, { backgroundColor: '#fef9c3' }] }>
-                <MaterialCommunityIcons name="thermometer" size={24} color="#dc2626" />
-              </View>
-              <Text style={styles.weatherLabel}>तापमान</Text>
-              <Text style={styles.weatherValue}>{weather.temperature}°C</Text>
-            </View>
-            <View style={styles.weatherCard}>
-              <View style={[styles.weatherIconCircle, { backgroundColor: '#bbf7d0' }] }>
-                <MaterialCommunityIcons name="water-percent" size={24} color="#2563eb" />
-              </View>
-              <Text style={styles.weatherLabel}>आर्द्रता</Text>
-              <Text style={styles.weatherValue}>{weather.humidity}%</Text>
-            </View>
-            <View style={styles.weatherCard}>
-              <View style={[styles.weatherIconCircle, { backgroundColor: '#fee2e2' }] }>
-                <MaterialCommunityIcons name="weather-rainy" size={24} color="#ca8a04" />
-              </View>
-              <Text style={styles.weatherLabel}>पाऊस संधी</Text>
-              <Text style={styles.weatherValue}>{weather.rainChance}%</Text>
-            </View>
+        {fieldsLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#22c55e" />
+            <Text style={styles.loadingText}>शेत लोड करत आहे...</Text>
           </View>
-        ) : <Text>माहिती उपलब्ध नाही.</Text>}
-      </View>
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>सल्ला/सूचना</Text>
-        {loading ? <ActivityIndicator size="small" color="#22c55e" /> : (
-          insights.length > 0 ? insights.map((item, idx) => (
-            <View key={idx} style={[styles.insightCard, { backgroundColor: getPriorityColor(item.priority), borderLeftColor: item.priority === 'high' ? '#dc2626' : item.priority === 'medium' ? '#facc15' : '#22c55e', borderLeftWidth: 4 }] }>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                {getPriorityIcon(item.priority)}
-                <Text style={{ fontWeight: 'bold', color: '#166534' }}>{item.type === 'alert' ? '⚠️' : '💡'} {item.message?.marathi || item.message}</Text>
-              </View>
-              <Text style={styles.timestamp}>{item.timestamp ? new Date(item.timestamp).toLocaleString('en-IN') : ''}</Text>
-            </View>
-          )) : <Text>सल्ला/सूचना उपलब्ध नाही.</Text>
+        ) : fields.length > 0 ? (
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={field}
+              style={styles.picker}
+              onValueChange={(itemValue) => setField(itemValue)}>
+              {fields.map((fieldItem) => (
+                <Picker.Item 
+                  key={fieldItem.fieldId} 
+                  label={`${fieldItem.name} (${fieldItem.fieldId})`} 
+                  value={fieldItem.fieldId} 
+                />
+              ))}
+            </Picker>
+          </View>
+        ) : (
+          <View style={styles.noFieldsContainer}>
+            <Text style={styles.noFieldsText}>कोणतेही शेत उपलब्ध नाहीत</Text>
+            <Text style={styles.noFieldsSubtext}>कृपया प्रशासकाशी संपर्क साधा</Text>
+          </View>
         )}
       </View>
+
+      {!field && !fieldsLoading && fields.length > 0 && (
+        <View style={styles.card}>
+          <View style={styles.noSelectionContainer}>
+            <MaterialCommunityIcons name="lightbulb-on-outline" size={48} color="#d1d5db" />
+            <Text style={styles.noSelectionText}>शेत निवडा</Text>
+            <Text style={styles.noSelectionSubtext}>सूचना मिळवण्यासाठी वरील ड्रॉपडाउनमधून शेत निवडा</Text>
+          </View>
+        </View>
+      )}
+
+      {field && (
+        <>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>हवामान माहिती</Text>
+            {loading ? <ActivityIndicator size="small" color="#22c55e" /> : weather ? (
+              <View style={styles.weatherRow}>
+                <View style={styles.weatherCard}>
+                  <View style={[styles.weatherIconCircle, { backgroundColor: '#fef9c3' }] }>
+                    <MaterialCommunityIcons name="thermometer" size={24} color="#dc2626" />
+                  </View>
+                  <Text style={styles.weatherLabel}>तापमान</Text>
+                  <Text style={styles.weatherValue}>{weather.temperature}°C</Text>
+                </View>
+                <View style={styles.weatherCard}>
+                  <View style={[styles.weatherIconCircle, { backgroundColor: '#bbf7d0' }] }>
+                    <MaterialCommunityIcons name="water-percent" size={24} color="#2563eb" />
+                  </View>
+                  <Text style={styles.weatherLabel}>आर्द्रता</Text>
+                  <Text style={styles.weatherValue}>{weather.humidity}%</Text>
+                </View>
+                <View style={styles.weatherCard}>
+                  <View style={[styles.weatherIconCircle, { backgroundColor: '#fee2e2' }] }>
+                    <MaterialCommunityIcons name="weather-rainy" size={24} color="#ca8a04" />
+                  </View>
+                  <Text style={styles.weatherLabel}>पाऊस संधी</Text>
+                  <Text style={styles.weatherValue}>{weather.rainChance}%</Text>
+                </View>
+              </View>
+            ) : <Text>माहिती उपलब्ध नाही.</Text>}
+          </View>
+          
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>सल्ला/सूचना</Text>
+            {loading ? <ActivityIndicator size="small" color="#22c55e" /> : (
+              insights.length > 0 ? insights.map((item, idx) => (
+                <View key={idx} style={[styles.insightCard, { backgroundColor: getPriorityColor(item.priority), borderLeftColor: item.priority === 'high' ? '#dc2626' : item.priority === 'medium' ? '#facc15' : '#22c55e', borderLeftWidth: 4 }] }>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {getPriorityIcon(item.priority)}
+                    <Text style={{ fontWeight: 'bold', color: '#166534' }}>{item.type === 'alert' ? '⚠️' : '💡'} {item.message?.marathi || item.message}</Text>
+                  </View>
+                  <Text style={styles.timestamp}>{item.timestamp ? new Date(item.timestamp).toLocaleString('en-IN') : ''}</Text>
+                </View>
+              )) : <Text>सल्ला/सूचना उपलब्ध नाही.</Text>
+            )}
+          </View>
+        </>
+      )}
+      
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Dashboard')}>
         <Text style={styles.backButtonText}>{'<'} डॅशबोर्डवर परत जा</Text>
       </TouchableOpacity>
@@ -204,6 +283,54 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+  loadingText: {
+    marginLeft: 10,
+    color: '#64748b',
+    fontSize: 14,
+  },
+  noFieldsContainer: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  noFieldsText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#dc2626',
+    marginBottom: 5,
+  },
+  noFieldsSubtext: {
+    fontSize: 14,
+    color: '#64748b',
+    textAlign: 'center',
+  },
+  noSelectionContainer: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  noSelectionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#166534',
+    marginTop: 10,
+  },
+  noSelectionSubtext: {
+    fontSize: 14,
+    color: '#64748b',
+    textAlign: 'center',
+    marginTop: 5,
   },
 });
 

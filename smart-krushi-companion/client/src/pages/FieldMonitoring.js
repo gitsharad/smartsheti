@@ -14,7 +14,8 @@ import {
   FiTrendingDown,
   FiCheckCircle,
   FiXCircle,
-  FiInfo
+  FiInfo,
+  FiPlus
 } from 'react-icons/fi';
 import { api } from '../services/authService';
 import { Line } from 'react-chartjs-2';
@@ -66,7 +67,7 @@ const FieldMonitoring = () => {
       setFields(response.data.fields);
       setTotalPages(response.data.pagination.totalPages);
     } catch (err) {
-      setError('Failed to load fields');
+      setError('Failed to load fields. Please try again.');
       console.error('Error loading fields:', err);
     } finally {
       setLoading(false);
@@ -86,20 +87,23 @@ const FieldMonitoring = () => {
     setFieldDetailsLoading(true);
     setFieldDetailsError('');
     setShowFieldDetails(true);
+    setSelectedField(null);
     setSensorData(null);
     setSensorDataLoading(true);
     setSensorDataError('');
+    
     try {
-      const res = await api.get(`/admin/fields/${field._id}`);
-      setSelectedField(res.data.field);
-      // Fetch sensor data
-      const sensorRes = await api.get(`/admin/fields/${field._id}/sensor-data?days=7`);
+      // Load field details and sensor data in parallel
+      const [fieldRes, sensorRes] = await Promise.all([
+        api.get(`/admin/fields/${field._id}`),
+        api.get(`/admin/fields/${field._id}/sensor-data?days=7`)
+      ]);
+      
+      setSelectedField(fieldRes.data.field);
       setSensorData(sensorRes.data);
     } catch (e) {
-      setFieldDetailsError('Failed to load field details.');
-      setSelectedField(null);
-      setSensorDataError('Failed to load sensor data.');
-      setSensorData(null);
+      setFieldDetailsError('Failed to load field details. Please try again.');
+      console.error('Error loading field details:', e);
     } finally {
       setFieldDetailsLoading(false);
       setSensorDataLoading(false);
@@ -180,6 +184,24 @@ const FieldMonitoring = () => {
               <p className="text-green-700 text-sm md:text-base font-semibold">Monitor all fields managed by your farmers</p>
             </div>
           </div>
+          
+          {/* Add Field Button - Only for Admin/Coordinator */}
+          {(() => {
+            const userStr = localStorage.getItem('user');
+            const user = userStr ? JSON.parse(userStr) : null;
+            const userRole = user?.role;
+            return (userRole === 'admin' || userRole === 'coordinator');
+          })() && (
+            <div className="mt-4 md:mt-0">
+              <button
+                onClick={() => navigate('/add-field')}
+                className="flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
+              >
+                <FiPlus className="w-5 h-5 mr-2" />
+                Add Field
+              </button>
+            </div>
+          )}
         </header>
 
         {/* Search and Filter */}

@@ -121,14 +121,21 @@ module.exports = {
   // Rate limiters
   standardLimiter: createRateLimiter(
     15 * 60 * 1000, // 15 minutes
-    100, // 100 requests
+    process.env.NODE_ENV === 'development' ? 1000 : 100, // 1000 requests in dev, 100 in prod
     'Too many requests, please try again later'
   ),
   
   strictLimiter: createRateLimiter(
     15 * 60 * 1000, // 15 minutes
-    50, // 50 requests
+    process.env.NODE_ENV === 'development' ? 500 : 50, // 500 requests in dev, 50 in prod
     'Too many sensitive requests, please try again later'
+  ),
+  
+  // Development rate limiter (very generous for testing)
+  devLimiter: createRateLimiter(
+    15 * 60 * 1000, // 15 minutes
+    10000, // 10,000 requests per 15 minutes for development
+    'Too many requests, please try again later'
   ),
   
   // Security middleware

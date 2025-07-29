@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/authService';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -104,8 +105,30 @@ const FieldList = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="overflow-x-auto">
+      {/* Add Field Button - Only for Admin/Coordinator */}
+      {(() => {
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        const userRole = user?.role;
+        return (userRole === 'admin' || userRole === 'coordinator');
+      })() && (
+        <div className="mb-4 flex justify-end">
+          <button
+            onClick={() => navigate('/add-field')}
+            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Field
+          </button>
+        </div>
+      )}
+      
       {loading ? (
         <div className="text-center text-green-800">Loading fields...</div>
       ) : (
