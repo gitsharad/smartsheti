@@ -1,0 +1,25 @@
+<svg width="300" height="80" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for the icon -->
+  <circle cx="40" cy="40" r="35" fill="#16a34a" opacity="0.15"/>
+  
+  <!-- Leaf icon representing agriculture -->
+  <path d="M25 20 Q40 12 55 20 Q65 28 55 35 Q40 42 25 35 Q15 28 25 20 Z" fill="#16a34a"/>
+  <path d="M35 15 Q45 8 55 15 Q60 20 55 25 Q45 32 35 25 Q30 20 35 15 Z" fill="#15803d"/>
+  
+  <!-- Circuit lines representing technology -->
+  <path d="M65 25 L85 25 M85 25 L85 32 M85 32 L75 32 M75 32 L75 40 M75 40 L90 40" stroke="#16a34a" stroke-width="3" fill="none"/>
+  <path d="M65 45 L90 45" stroke="#16a34a" stroke-width="3" fill="none"/>
+  
+  <!-- Data dots representing analytics -->
+  <circle cx="70" cy="22" r="2" fill="#16a34a"/>
+  <circle cx="78" cy="28" r="2" fill="#16a34a"/>
+  <circle cx="86" cy="36" r="2" fill="#16a34a"/>
+  <circle cx="78" cy="45" r="2" fill="#16a34a"/>
+  
+  <!-- Text: Smart Krishi -->
+  <text x="110" y="32" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#16a34a">स्मार्ट शेती</text>
+  <text x="110" y="50" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">Smart Krishi</text>
+  
+  <!-- Tagline -->
+  <text x="110" y="65" font-family="Arial, sans-serif" font-size="12" fill="#9ca3af">AI-Powered Agriculture</text>
+</svg> 
