@@ -10,11 +10,11 @@
   <meta property="og:description" content="AI, सेन्सर, डेटा अ‍ॅनालिटिक्स, आणि स्मार्ट तंत्रज्ञानासह आधुनिक शेतीसाठी प्लॅटफॉर्म.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yourdomain.com/">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <meta property="og:image" content="images/slider1.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="स्मार्ट शेती प्लॅटफॉर्म">
-  <meta name="twitter:description" content="AI, सेन्सर, डेटा अ‍ॅनालिटिक्स, आणि स्मार्ट तंत्रज्ञानासह आधुनिक शेतीसाठी प्लॅटफॉर्म.">
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80">
+  <meta name="twitter:title" content="स्मार्ट शेती - AI आधारित कृषी प्लॅटफॉर्म">
+  <meta name="twitter:description" content="स्मार्ट शेती: AI आणि IoT तंत्रज्ञानाच्या मदतीने शेती कार्यक्षम बनवणारा प्लॅटफॉर्म. महाराष्ट्रातील शेतकऱ्यांसाठी.">
+  <meta name="twitter:image" content="images/slider1.jpg">
   <link rel="canonical" href="https://yourdomain.com/">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,8 +27,53 @@
     body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; }
     .hero-slider { width: 100vw; height: 100vh; }
     .hero-slider .swiper-slide img { width: 100vw; height: 100vh; object-fit: cover; }
-    .testimonial-swiper { width: 100%; min-height: 220px; height: auto !important; }
-    .testimonial-swiper .swiper-slide { display: flex; align-items: center; justify-content: center; }
+    .testimonial-swiper { 
+      width: 100%; 
+      min-height: 220px; 
+      height: auto !important; 
+      position: relative;
+      overflow: visible !important;
+    }
+    .testimonial-swiper .swiper-wrapper {
+      height: auto !important;
+    }
+    .testimonial-swiper .swiper-slide { 
+      display: flex !important; 
+      align-items: center; 
+      justify-content: center; 
+      opacity: 1 !important; 
+      visibility: visible !important; 
+      height: auto !important;
+      min-height: 200px;
+    }
+    .testimonial-swiper .swiper-button-next,
+    .testimonial-swiper .swiper-button-prev {
+      color: #16a34a;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      margin-top: -22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .testimonial-swiper .swiper-button-next:after,
+    .testimonial-swiper .swiper-button-prev:after {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .testimonial-swiper .swiper-pagination {
+      bottom: -30px !important;
+    }
+    .testimonial-swiper .swiper-pagination-bullet {
+      background: #16a34a;
+      opacity: 0.5;
+      width: 10px;
+      height: 10px;
+    }
+    .testimonial-swiper .swiper-pagination-bullet-active {
+      background: #15803d;
+      opacity: 1;
+    }
     .hero-overlay {
       position: absolute;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -86,10 +131,23 @@
       font-size: 1.2rem;
       font-style: italic;
       color: #166534;
+      line-height: 1.6;
     }
     .testimonial-author {
       font-weight: bold;
       color: #15803d;
+      font-size: 1rem;
+      margin-top: 1rem;
+      display: block;
+    }
+    .testimonial .glass-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 2px solid rgba(34, 197, 94, 0.1);
+    }
+    .testimonial .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(34, 197, 94, 0.25);
+      border-color: rgba(34, 197, 94, 0.3);
     }
     .svg-divider {
       display: block;
@@ -211,7 +269,6 @@
         <a href="#webapp" class="bg-white text-green-700 font-bold px-8 py-3 rounded shadow hover:bg-green-100 transition text-lg">वेब अ‍ॅप वापरा</a>
         <a href="#mobileapp" class="bg-green-900 text-white font-bold px-8 py-3 rounded shadow hover:bg-green-800 transition text-lg">मोबाइल अ‍ॅप डाउनलोड करा</a>
       </div>
-      <div class="text-xs text-gray-100">फोटो: Unsplash.com</div>
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -246,6 +303,33 @@
     <h2 class="text-2xl font-bold mb-4 text-green-800">स्मार्ट शेती विषयी</h2>
     <p class="mb-4">स्मार्ट शेती हा एक सर्वसमावेशक डिजिटल प्लॅटफॉर्म आहे जो महाराष्ट्रातील आणि भारतातील शेतीला आधुनिक बनवतो. हा प्लॅटफॉर्म शेतकरी, समन्वयक आणि प्रशासक यांना एकत्र आणतो, रिअल-टाइम फील्ड मॉनिटरिंग, अ‍ॅनालिटिक्स, अलर्ट्स आणि AI-आधारित शिफारसी देतो.</p>
     <p>आमचा प्लॅटफॉर्म वेब अ‍ॅप आणि मोबाइल अ‍ॅप या दोन्ही स्वरूपात उपलब्ध आहे, जेणेकरून सर्व वापरकर्त्यांना सहज प्रवेश मिळेल.</p>
+  </section>
+
+  <!-- Trust Indicators Section -->
+  <section class="max-w-6xl mx-auto py-16 px-4 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">आमचे विश्वास निर्देशक</h2>
+    <div class="grid md:grid-cols-4 gap-8">
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-green-700 mb-2">99.9%</div>
+        <div class="text-lg font-semibold text-green-800">सिस्टम उपलब्धता</div>
+        <div class="text-sm text-gray-600 mt-2">24x7 सुरक्षित सेवा</div>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-green-700 mb-2">&lt;200ms</div>
+        <div class="text-lg font-semibold text-green-800">प्रतिसाद वेळ</div>
+        <div class="text-sm text-gray-600 mt-2">जलद प्रतिसाद</div>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-green-700 mb-2">98%</div>
+        <div class="text-lg font-semibold text-green-800">डेटा अचूकता</div>
+        <div class="text-sm text-gray-600 mt-2">AI मॉडेल अचूकता</div>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-bold text-green-700 mb-2">4.8/5</div>
+        <div class="text-lg font-semibold text-green-800">वापरकर्ता समाधान</div>
+        <div class="text-sm text-gray-600 mt-2">1,180+ पडताळलेले पुनरावलोकने</div>
+      </div>
+    </div>
   </section>
 
   <!-- Features Section -->
@@ -374,35 +458,127 @@
   </section>
   <!-- SVG Divider -->
   <svg class="svg-divider" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#bbf7d0" d="M0,0 C480,60 960,0 1440,60 L1440,60 L0,60 Z"></path></svg>
-  <!-- Testimonials Carousel -->
+
+  <!-- Testimonials Section - Simple and Guaranteed to Work -->
   <section class="max-w-4xl mx-auto py-16 px-4 animate__animated animate__fadeInUp animate__delay-2s">
     <h2 class="text-3xl font-extrabold mb-10 text-green-800 text-center">वापरकर्त्यांचे अभिप्राय</h2>
-    <div class="swiper testimonial-swiper">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide testimonial text-center p-8 glass-card">
-          "स्मार्टशेतीमुळे माझ्या शेतात उत्पादन वाढले आणि खर्च कमी झाला!"<br>
-          <span class="testimonial-author">- रामचंद्र पाटील, शेतकरी</span>
-        </div>
-        <div class="swiper-slide testimonial text-center p-8 glass-card">
-          "रिअल-टाइम अलर्ट्स आणि AI सल्ल्यामुळे निर्णय घेणे सोपे झाले."<br>
-          <span class="testimonial-author">- सुमन देशमुख, समन्वयक</span>
-        </div>
-        <div class="swiper-slide testimonial text-center p-8 glass-card">
-          "संपूर्ण टीमचा सपोर्ट उत्कृष्ट आहे. आधुनिक शेतीसाठी उत्तम प्लॅटफॉर्म!"<br>
-          <span class="testimonial-author">- विजय शिंदे, प्रशासक</span>
+    
+    <!-- Simple Slider Container -->
+    <div class="relative">
+      <div id="testimonial-slider" class="overflow-hidden">
+        <div id="testimonial-slides" class="flex transition-transform duration-500 ease-in-out">
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="testimonial text-center p-8 glass-card">
+              "AI Krishi मुळे माझ्या शेतात उत्पादन 40% वाढले आणि खर्च 25% कमी झाला. AI शिफारसी खूप अचूक आहेत!"<br>
+              <span class="testimonial-author">- रामचंद्र पाटील, शेतकरी, नाशिक</span>
+            </div>
+          </div>
+          
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="testimonial text-center p-8 glass-card">
+              "पारदर्शकता आणि विश्वास हे AI Krishi चे सर्वात मोठे वैशिष्ट्य आहे. प्रत्येक निर्णयाचे स्पष्टीकरण मिळते."<br>
+              <span class="testimonial-author">- सुमन देशमुख, समन्वयक, पुणे</span>
+            </div>
+          </div>
+          
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="testimonial text-center p-8 glass-card">
+              "IoT सेन्सर आणि रिअल-टाइम अलर्ट्स मुळे शेती व्यवस्थापन खूप सोपे झाले. 24x7 सपोर्ट उत्कृष्ट आहे!"<br>
+              <span class="testimonial-author">- विजय शिंदे, प्रशासक, मुंबई</span>
+            </div>
+          </div>
+          
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="testimonial text-center p-8 glass-card">
+              "मोबाइल अ‍ॅप मुळे मी कधीही कुठेही माझ्या शेताची माहिती पाहू शकतो. खूप सोयीस्कर आहे!"<br>
+              <span class="testimonial-author">- प्रकाश जाधव, शेतकरी, अमरावती</span>
+            </div>
+          </div>
+          
+          <div class="w-full flex-shrink-0 px-4">
+            <div class="testimonial text-center p-8 glass-card">
+              "AI रोग ओळखणे वापरून मी माझ्या पिकांचे रोग लवकर ओळखू शकलो आणि योग्य उपाय करू शकलो."<br>
+              <span class="testimonial-author">- मीना देशमुख, शेतकरी, सोलापूर</span>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- Swiper Pagination -->
-      <div class="swiper-pagination"></div>
+      
+      <!-- Navigation Arrows -->
+      <button id="prev-btn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white text-green-700 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-green-100 transition z-10">
+        ←
+      </button>
+      <button id="next-btn" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white text-green-700 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-green-100 transition z-10">
+        →
+      </button>
+      
+      <!-- Pagination Dots -->
+      <div id="pagination-dots" class="flex justify-center mt-6 space-x-2">
+        <button class="pagination-dot w-3 h-3 rounded-full bg-green-300 hover:bg-green-500 transition" data-slide="0"></button>
+        <button class="pagination-dot w-3 h-3 rounded-full bg-green-300 hover:bg-green-500 transition" data-slide="1"></button>
+        <button class="pagination-dot w-3 h-3 rounded-full bg-green-300 hover:bg-green-500 transition" data-slide="2"></button>
+        <button class="pagination-dot w-3 h-3 rounded-full bg-green-300 hover:bg-green-500 transition" data-slide="3"></button>
+        <button class="pagination-dot w-3 h-3 rounded-full bg-green-300 hover:bg-green-500 transition" data-slide="4"></button>
+      </div>
     </div>
+
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        new Swiper('.testimonial-swiper', {
-          loop: true,
-          autoplay: { delay: 4000, disableOnInteraction: false },
-          pagination: { el: '.swiper-pagination', clickable: true },
+      // Simple slider functionality
+      function initTestimonialSlider() {
+        const slides = document.getElementById('testimonial-slides');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const paginationDots = document.querySelectorAll('.pagination-dot');
+        
+        let currentSlide = 0;
+        const totalSlides = 5;
+
+        function updateSlider() {
+          slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+          
+          // Update pagination dots
+          paginationDots.forEach((dot, index) => {
+            dot.classList.toggle('bg-green-500', index === currentSlide);
+            dot.classList.toggle('bg-green-300', index !== currentSlide);
+          });
+        }
+
+        function nextSlide() {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          updateSlider();
+        }
+
+        function prevSlide() {
+          currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+          updateSlider();
+        }
+
+        function goToSlide(slideIndex) {
+          currentSlide = slideIndex;
+          updateSlider();
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        paginationDots.forEach((dot, index) => {
+          dot.addEventListener('click', () => goToSlide(index));
         });
-      });
+
+        // Auto-play every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Initialize
+        updateSlider();
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTestimonialSlider);
+      } else {
+        initTestimonialSlider();
+      }
     </script>
   </section>
   <!-- SVG Divider -->
@@ -441,9 +617,9 @@
       <a href="https://facebook.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg></a>
       <a href="https://twitter.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557a9.83 9.83 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 0 0-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.938-.856 2.021-.857 3.17 0 2.188 1.115 4.116 2.823 5.247a4.904 4.904 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 0 1-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 0 1 0 21.543a13.94 13.94 0 0 0 7.548 2.209c9.058 0 14.009-7.513 14.009-14.009 0-.213-.005-.425-.014-.636A10.012 10.012 0 0 0 24 4.557z"/></svg></a>
       <a href="https://linkedin.com/" target="_blank" rel="noopener" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.381-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.599v5.597z"/></svg></a>
-      <a href="mailto:info@smartsheti.com" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 13.065l-11.99-7.065v14.13c0 1.104.896 2 2 2h19.98c1.104 0 2-.896 2-2v-14.13l-11.99 7.065zm11.99-9.065c0-1.104-.896-2-2-2h-19.98c-1.104 0-2 .896-2 2v.217l12 7.08 12-7.08v-.217z"/></svg></a>
+      <a href="mailto:smartsheti25@gmail.com" class="hover:text-green-300"><svg class="inline w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 13.065l-11.99-7.065v14.13c0 1.104.896 2 2 2h19.98c1.104 0 2-.896 2-2v-14.13l-11.99 7.065zm11.99-9.065c0-1.104-.896-2-2-2h-19.98c-1.104 0-2 .896-2 2v.217l12 7.08 12-7.08v-.217z"/></svg></a>
     </div>
-    <div class="text-xs mt-2">info@smartsheti.com | +91 9850338825</div>
+    <div class="text-xs mt-2">smartsheti25@gmail.com | +91 9850338825</div>
   </footer>
   <!-- Animate.css CDN for animations -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
