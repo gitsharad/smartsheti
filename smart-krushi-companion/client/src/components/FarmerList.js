@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiUser, FiEdit2, FiTrash2, FiPlus, FiSearch, FiDownload, FiUpload, FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { api } from '../services/authService';
+import authService from '../services/authService';
 
 const FarmerList = () => {
   const [farmers, setFarmers] = useState([]);
@@ -17,15 +18,29 @@ const FarmerList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
+  // Get current user role
+  const currentUser = authService.getCurrentUser();
+  const isCoordinator = currentUser?.role === 'coordinator';
+
   useEffect(() => {
     fetchFarmers();
-    fetchCoordinators();
+    // Only fetch coordinators if user is admin (for assignment dropdown)
+    if (!isCoordinator) {
+      fetchCoordinators();
+    }
   }, []);
 
   const fetchFarmers = () => {
     setLoading(true);
-    api.get('/admin/farmers')
-      .then(res => setFarmers(res.data.farmers || res.data))
+    // Use different endpoints based on user role
+    const endpoint = isCoordinator ? '/coordinator/managed-farmers' : '/admin/farmers';
+    
+    api.get(endpoint)
+      .then(res => {
+        // Handle different response formats
+        const farmersData = res.data.farmers || res.data || [];
+        setFarmers(farmersData);
+      })
       .catch(() => setFarmers([]))
       .finally(() => setLoading(false));
   };
@@ -123,7 +138,7 @@ const FarmerList = () => {
     (f.name || '').toLowerCase().includes(search.toLowerCase()) ||
     (f.email || '').toLowerCase().includes(search.toLowerCase()) ||
     (f.phone || f.phoneNumber || '').includes(search) ||
-    (f.coordinatorName || '').toLowerCase().includes(search.toLowerCase())
+    (!isCoordinator && (f.coordinatorName || '').toLowerCase().includes(search.toLowerCase()))
   );
 
   // Calculate paginated farmers
@@ -156,12 +171,16 @@ const FarmerList = () => {
             accept=".csv"
             onChange={handleImport}
           />
-          <button onClick={handleImportClick} className="flex items-center px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
-            <FiUpload className="mr-1" /> Import
-          </button>
-          <button onClick={handleExport} className="flex items-center px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
-            <FiDownload className="mr-1" /> Export
-          </button>
+          {!isCoordinator && (
+            <>
+              <button onClick={handleImportClick} className="flex items-center px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                <FiUpload className="mr-1" /> Import
+              </button>
+              <button onClick={handleExport} className="flex items-center px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                <FiDownload className="mr-1" /> Export
+              </button>
+            </>
+          )}
           <Link to="/add-farmer" className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">
             <FiPlus className="mr-1" /> Add Farmer
           </Link>
@@ -177,7 +196,7 @@ const FarmerList = () => {
                 <th className="py-2 px-4">Name</th>
                 <th className="py-2 px-4">Email</th>
                 <th className="py-2 px-4">Phone</th>
-                <th className="py-2 px-4">Coordinator</th>
+                {!isCoordinator && <th className="py-2 px-4">Coordinator</th>}
                 <th className="py-2 px-4">Fields</th>
                 <th className="py-2 px-4">Status</th>
                 <th className="py-2 px-4">Actions</th>
@@ -185,7 +204,7 @@ const FarmerList = () => {
             </thead>
             <tbody>
               {paginatedFarmers.length === 0 ? (
-                <tr><td colSpan="7" className="text-center py-4 text-gray-500">No farmers found.</td></tr>
+                <tr><td colSpan={isCoordinator ? 6 : 7} className="text-center py-4 text-gray-500">No farmers found.</td></tr>
               ) : (
                 paginatedFarmers.map(farmer => (
                   <tr key={farmer._id} className="border-b hover:bg-gray-50">
@@ -195,19 +214,21 @@ const FarmerList = () => {
                     </td>
                     <td className="py-2 px-4">{farmer.email}</td>
                     <td className="py-2 px-4">{farmer.phone || farmer.phoneNumber}</td>
-                    <td className="py-2 px-4">
-                      <select
-                        value={farmer.coordinator || ''}
-                        onChange={e => handleAssignCoordinator(farmer._id, e.target.value)}
-                        className="border rounded px-2 py-1 text-sm"
-                      >
-                        <option value="">Unassigned</option>
-                        {coordinators.map(c => (
-                          <option key={c._id} value={c._id}>{c.name}</option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="py-2 px-4">{farmer.fields || farmer.ownedFields?.length || 0}</td>
+                    {!isCoordinator && (
+                      <td className="py-2 px-4">
+                        <select
+                          value={farmer.coordinator || ''}
+                          onChange={e => handleAssignCoordinator(farmer._id, e.target.value)}
+                          className="border rounded px-2 py-1 text-sm"
+                        >
+                          <option value="">Unassigned</option>
+                          {coordinators.map(c => (
+                            <option key={c._id} value={c._id}>{c.name}</option>
+                          ))}
+                        </select>
+                      </td>
+                    )}
+                    <td className="py-2 px-4">{farmer.fieldCount || farmer.fields || farmer.ownedFields?.length || 0}</td>
                     <td className="py-2 px-4">
                       <span className={`px-2 py-1 rounded text-xs font-semibold ${farmer.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-600'}`}>{farmer.status || 'Active'}</span>
                     </td>
@@ -215,7 +236,7 @@ const FarmerList = () => {
                       <button className="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200 text-xs" onClick={() => handleEdit(farmer)}>
                         <FiEdit2 className="mr-1" /> Edit
                       </button>
-                      {(farmer.status === 'Active' || !farmer.status) && (
+                      {!isCoordinator && (farmer.status === 'Active' || !farmer.status) && (
                         <button
                           className="inline-flex items-center px-2 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200 text-xs"
                           onClick={() => handleDeactivate(farmer._id)}

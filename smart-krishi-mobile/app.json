@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "smart-krushi-mobile",
+    "name": "Smart Krishi",
     "slug": "smart-krushi-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,20 +13,47 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smartkrishi.mobile",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses camera to capture field images and scan QR codes",
+        "NSPhotoLibraryUsageDescription": "This app accesses photo library to select field images",
+        "NSLocationWhenInUseUsageDescription": "This app uses location to show nearby fields and weather data"
+      },
+      "appStoreUrl": "https://apps.apple.com/app/smart-krishi",
+      "associatedDomains": [
+        "applinks:smartsheti.com"
+      ]
     },
     "android": {
+      "package": "com.smartkrishi.mobile",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#16a34a"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bba62f9e-0218-4f2e-b6d0-2ba41b53f329"
+      }
+    }
   }
 }
