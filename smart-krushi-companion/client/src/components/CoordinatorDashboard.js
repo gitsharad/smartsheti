@@ -16,6 +16,7 @@ import {
   FiActivity
 } from 'react-icons/fi';
 import authService from '../services/authService';
+import { api } from '../services/authService';
 import FieldMap from './FieldMap';
 import FieldList from './FieldList';
 import FarmerList from './FarmerList';
@@ -27,6 +28,7 @@ const CoordinatorDashboard = () => {
   const [stats, setStats] = useState({
     totalFarmers: 0,
     activeFields: 0,
+    totalFields: 0,
     alertsThisWeek: 0,
     averageYield: 0
   });
@@ -46,28 +48,35 @@ const CoordinatorDashboard = () => {
   const loadCoordinatorData = async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual API calls
-      // For now, using mock data
-      setStats({
-        totalFarmers: 15,
-        activeFields: 23,
-        alertsThisWeek: 8,
-        averageYield: 85
+      
+      // Fetch dashboard stats
+      const statsResponse = await api.get('/coordinator/dashboard-stats');
+      setStats(statsResponse.data.stats);
+      
+      // Fetch managed farmers
+      const farmersResponse = await api.get('/coordinator/managed-farmers', {
+        params: { page: 1, limit: 5 }
       });
+      setManagedFarmers(farmersResponse.data.farmers || []);
       
-      setManagedFarmers([
-        { id: 1, name: 'Rajesh Patil', phone: '+91-98765-43210', fields: 3, status: 'Active' },
-        { id: 2, name: 'Sunita Devi', phone: '+91-98766-54321', fields: 2, status: 'Active' },
-        { id: 3, name: 'Amit Kumar', phone: '+91-98767-65432', fields: 4, status: 'Alert' }
-      ]);
+      // Fetch recent alerts
+      const alertsResponse = await api.get('/coordinator/alerts', {
+        params: { page: 1, limit: 5 }
+      });
+      setRecentAlerts(alertsResponse.data.alerts || []);
       
-      setRecentAlerts([
-        { id: 1, type: 'moisture', message: 'Low moisture detected in Plot B2', farmer: 'Amit Kumar', severity: 'high' },
-        { id: 2, type: 'pest', message: 'Pest alert in Plot A1', farmer: 'Rajesh Patil', severity: 'medium' },
-        { id: 3, type: 'irrigation', message: 'Irrigation needed in 3 fields', farmer: 'Multiple', severity: 'low' }
-      ]);
     } catch (error) {
       console.error('Error loading coordinator data:', error);
+      // Fallback to empty data on error
+      setStats({
+        totalFarmers: 0,
+        activeFields: 0,
+        totalFields: 0,
+        alertsThisWeek: 0,
+        averageYield: 0
+      });
+      setManagedFarmers([]);
+      setRecentAlerts([]);
     } finally {
       setLoading(false);
     }
@@ -134,7 +143,7 @@ const CoordinatorDashboard = () => {
             <div className="flex items-center">
               <FiUsers className="text-blue-500 text-3xl mr-4" />
               <div>
-                <p className="text-gray-500 text-sm">Total Farmers</p>
+                <p className="text-gray-500 text-sm">My Farmers</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalFarmers}</p>
               </div>
             </div>
@@ -146,6 +155,7 @@ const CoordinatorDashboard = () => {
               <div>
                 <p className="text-gray-500 text-sm">Active Fields</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.activeFields}</p>
+                <p className="text-xs text-gray-400">of {stats.totalFields} total</p>
               </div>
             </div>
           </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FiAlertTriangle, FiCheckCircle, FiUser, FiChevronDown } from 'react-icons/fi';
 import apiRoutes from '../services/apiRoutes';
+import { api } from '../services/authService';
 
-const AlertList = () => {
+const AlertList = ({ role = 'admin' }) => {
   const [alerts, setAlerts] = useState([]);
   const [coordinators, setCoordinators] = useState([]);
   const [filter, setFilter] = useState('All');
@@ -22,14 +23,27 @@ const AlertList = () => {
     setLoading(true);
     setError(null);
     try {
-      const [alertsRes, coordRes] = await Promise.all([
-        apiRoutes.getAdminAlerts(),
-        apiRoutes.getAdminCoordinators()
-      ]);
+      let alertsRes;
+      
+      if (role === 'coordinator') {
+        // Use coordinator-specific endpoint
+        alertsRes = await api.get('/coordinator/alerts', {
+          params: { page: currentPage, limit: rowsPerPage }
+        });
+      } else {
+        // Use admin endpoint
+        alertsRes = await apiRoutes.getAdminAlerts();
+      }
+      
       setAlerts(alertsRes.data.alerts || []);
-      setCoordinators(coordRes.data.coordinators || []);
+      
+      // Only fetch coordinators for admin role
+      if (role !== 'coordinator') {
+        const coordRes = await apiRoutes.getAdminCoordinators();
+        setCoordinators(coordRes.data.coordinators || []);
+      }
     } catch (err) {
-      setError('Failed to load alerts or coordinators');
+      setError('Failed to load alerts');
     } finally {
       setLoading(false);
     }
@@ -98,12 +112,12 @@ const AlertList = () => {
                 <th className="py-2 px-4">Farmer</th>
                 <th className="py-2 px-4">Severity</th>
                 <th className="py-2 px-4">Status</th>
-                <th className="py-2 px-4">Actions</th>
+                {role !== 'coordinator' && <th className="py-2 px-4">Actions</th>}
               </tr>
             </thead>
             <tbody>
               {paginatedAlerts.length === 0 ? (
-                <tr><td colSpan="6" className="text-center py-4 text-gray-500">No alerts found.</td></tr>
+                <tr><td colSpan={role === 'coordinator' ? 5 : 6} className="text-center py-4 text-gray-500">No alerts found.</td></tr>
               ) : (
                 paginatedAlerts.map(alert => (
                   <tr key={alert._id} className="border-b hover:bg-gray-50">
@@ -123,30 +137,32 @@ const AlertList = () => {
                       <span className={`px-2 py-1 rounded text-xs font-semibold ${alert.status === 'Acknowledged' ? 'bg-green-100 text-green-800' : alert.status === 'Assigned' ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-600'}`}>{alert.status}</span>
                       {alert.assignedTo && <span className="ml-2 text-xs text-blue-700">({alert.assignedTo})</span>}
                     </td>
-                    <td className="py-2 px-4 space-x-2">
-                      {alert.status !== 'Acknowledged' && (
-                        <button
-                          className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 text-xs disabled:opacity-50"
-                          onClick={() => handleAcknowledge(alert._id)}
-                          disabled={actionLoading === alert._id}
-                        >
-                          <FiCheckCircle className="mr-1" /> {actionLoading === alert._id ? '...' : 'Acknowledge'}
-                        </button>
-                      )}
-                      {alert.status !== 'Assigned' && alert.status !== 'Acknowledged' && (
-                        <select
-                          className="border rounded px-2 py-1 text-xs"
-                          defaultValue=""
-                          onChange={e => e.target.value && handleAssign(alert._id, e.target.value)}
-                          disabled={actionLoading === alert._id}
-                        >
-                          <option value="" disabled>Assign to...</option>
-                          {coordinators.map(c => (
-                            <option key={c._id} value={c._id}>{c.name}</option>
-                          ))}
-                        </select>
-                      )}
-                    </td>
+                    {role !== 'coordinator' && (
+                      <td className="py-2 px-4 space-x-2">
+                        {alert.status !== 'Acknowledged' && (
+                          <button
+                            className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 text-xs disabled:opacity-50"
+                            onClick={() => handleAcknowledge(alert._id)}
+                            disabled={actionLoading === alert._id}
+                          >
+                            <FiCheckCircle className="mr-1" /> {actionLoading === alert._id ? '...' : 'Acknowledge'}
+                          </button>
+                        )}
+                        {alert.status !== 'Assigned' && alert.status !== 'Acknowledged' && (
+                          <select
+                            className="border rounded px-2 py-1 text-xs"
+                            defaultValue=""
+                            onChange={e => e.target.value && handleAssign(alert._id, e.target.value)}
+                            disabled={actionLoading === alert._id}
+                          >
+                            <option value="" disabled>Assign to...</option>
+                            {coordinators.map(c => (
+                              <option key={c._id} value={c._id}>{c.name}</option>
+                            ))}
+                          </select>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

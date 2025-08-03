@@ -38,7 +38,7 @@ return [field.location.coordinates[0], field.location.coordinates[1]];
   return null;
 }
 
-const FieldList = () => {
+const FieldList = ({ role = 'admin' }) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -62,12 +62,20 @@ const FieldList = () => {
 
   useEffect(() => {
     fetchFields();
-  }, []);
+  }, [role]);
 
   const fetchFields = () => {
     setLoading(true);
-    api.get('/admin/fields')
-      .then(res => setFields(res.data.fields || res.data))
+    
+    // Use different endpoints based on role
+    const endpoint = role === 'coordinator' ? '/coordinator/field-overview' : '/admin/fields';
+    
+    api.get(endpoint)
+      .then(res => {
+        // Handle different response formats
+        const fieldsData = res.data.fields || res.data || [];
+        setFields(fieldsData);
+      })
       .catch(() => setFields([]))
       .finally(() => setLoading(false));
   };

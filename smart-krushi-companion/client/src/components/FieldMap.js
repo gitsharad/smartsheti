@@ -17,18 +17,26 @@ const MAP_TILES = {
   }
 };
 
-const FieldMap = () => {
+const FieldMap = ({ role = 'admin' }) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('map'); // 'map' or 'satellite'
 
   useEffect(() => {
     setLoading(true);
-    api.get('/admin/fields')
-      .then(res => setFields(res.data.fields || res.data))
+    
+    // Use different endpoints based on role
+    const endpoint = role === 'coordinator' ? '/coordinator/field-overview' : '/admin/fields';
+    
+    api.get(endpoint)
+      .then(res => {
+        // Handle different response formats
+        const fieldsData = res.data.fields || res.data || [];
+        setFields(fieldsData);
+      })
       .catch(() => setFields([]))
       .finally(() => setLoading(false));
-  }, []);
+  }, [role]);
 
   // Robust filtering for fields with valid coordinates (top-level lat/lng)
   const fieldsWithCoords = fields.filter(f =>
