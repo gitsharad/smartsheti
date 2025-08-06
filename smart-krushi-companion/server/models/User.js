@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     required: [true, 'Phone number is required'],
-    match: [/^\+?[\d\s-]+$/, 'Please enter a valid phone number']
+    match: [/^[\d\s\-\(\)\+]+$/, 'Please enter a valid phone number']
   },
   preferredLanguage: {
     type: String,

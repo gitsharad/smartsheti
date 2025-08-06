@@ -91,7 +91,9 @@ const updateProfile = async (req, res) => {
     userId: req.user._id,
     requestedUpdates: updates,
     allowedUpdates: allowedUpdates,
-    body: req.body
+    bodyKeys: Object.keys(req.body),
+    hasProfileImage: !!req.body.profileImage,
+    profileImageLength: req.body.profileImage ? req.body.profileImage.length : 0
   });
 
   // Check if all requested fields are allowed
@@ -163,9 +165,33 @@ const updateProfile = async (req, res) => {
       delete req.body.notifications; // Remove from body to avoid double assignment
     }
 
+    // Handle profileImage update (validate base64 format)
+    if (req.body.profileImage) {
+      // Check if it's a valid base64 image
+      if (typeof req.body.profileImage === 'string' && 
+          (req.body.profileImage.startsWith('data:image/') || 
+           req.body.profileImage.startsWith('data:image/jpeg') ||
+           req.body.profileImage.startsWith('data:image/png') ||
+           req.body.profileImage.startsWith('data:image/gif'))) {
+        req.user.profileImage = req.body.profileImage;
+      } else {
+        return res.status(400).json({
+          error: 'Invalid profile image format',
+          message: {
+            english: 'Profile image must be a valid base64 image',
+            marathi: 'प्रोफाइल इमेज वैध बेस64 इमेज असली पाहिजे'
+          }
+        });
+      }
+      delete req.body.profileImage; // Remove from body to avoid double assignment
+    }
+
     // Update all other fields
     updates.forEach(update => {
-      if (update !== 'password' && update !== 'notificationPreferences' && update !== 'notifications') { // Skip handled fields
+      if (update !== 'password' && 
+          update !== 'notificationPreferences' && 
+          update !== 'notifications' && 
+          update !== 'profileImage') { // Skip handled fields
         // Only update if the field exists in the user model or is a safe field
         if (req.user[update] !== undefined || allowedUpdates.includes(update)) {
           req.user[update] = req.body[update];
@@ -329,10 +355,56 @@ const debugProfileUpdate = async (req, res) => {
   });
 };
 
+// Test profile update with minimal validation
+const testProfileUpdate = async (req, res) => {
+  try {
+    const updates = Object.keys(req.body);
+    logger.info('Test profile update:', {
+      userId: req.user._id,
+      updates: updates,
+      bodyKeys: Object.keys(req.body)
+    });
+
+    // Simple validation - only allow basic fields
+    const allowedFields = ['name', 'email', 'phoneNumber', 'address', 'village', 'district', 'state', 'pincode', 'preferredLanguage', 'notificationPreferences', 'profileImage'];
+    const invalidFields = updates.filter(field => !allowedFields.includes(field));
+
+    if (invalidFields.length > 0) {
+      return res.status(400).json({
+        error: 'Invalid fields',
+        invalidFields: invalidFields,
+        allowedFields: allowedFields
+      });
+    }
+
+    // Update fields
+    updates.forEach(field => {
+      if (allowedFields.includes(field)) {
+        req.user[field] = req.body[field];
+      }
+    });
+
+    await req.user.save();
+
+    res.json({
+      message: 'Test update successful',
+      updatedFields: updates,
+      user: req.user
+    });
+  } catch (error) {
+    logger.error('Test update error:', error);
+    res.status(400).json({
+      error: 'Test update failed',
+      details: error.message
+    });
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   changePassword,
   getUserActivity,
-  debugProfileUpdate
+  debugProfileUpdate,
+  testProfileUpdate
 }; 
