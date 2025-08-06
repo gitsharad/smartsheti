@@ -10,6 +10,7 @@ const {
   getProfile, 
   updateProfile 
 } = require('../controllers/authController');
+const { changePassword } = require('../controllers/profileController');
 const { standardLimiter } = require('../utils/security');
 
 const router = express.Router();
@@ -30,5 +31,6 @@ router.post('/register', auth, standardLimiter, register);
 router.post('/logout', auth, logout);
 router.get('/profile', auth, getProfile);
 router.patch('/profile', auth, updateProfile);
+router.post('/change-password', auth, changePassword);
 
 module.exports = router; 

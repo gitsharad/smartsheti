@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import apiRoutes from '../services/apiRoutes';
-import { FiUser, FiArrowLeft } from 'react-icons/fi';
+import { FiUser, FiArrowLeft, FiEdit3, FiSave, FiX, FiCamera, FiMapPin, FiPhone, FiMail, FiGlobe, FiShield } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import PasswordChangeModal from '../components/PasswordChangeModal';
+import TwoFactorAuth from '../components/TwoFactorAuth';
+import LoginHistory from '../components/LoginHistory';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [fields, setFields] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [validationErrors, setValidationErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Security modals state
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
+  const [showLoginHistoryModal, setShowLoginHistoryModal] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -16,6 +29,25 @@ const Profile = () => {
         const response = await apiRoutes.getProfile();
         setProfile(response.data.user);
         setFields(response.data.fields || []);
+        setFormData({
+          name: response.data.user?.name || '',
+          email: response.data.user?.email || '',
+          phoneNumber: response.data.user?.phoneNumber || '',
+          address: response.data.user?.address || '',
+          village: response.data.user?.village || '',
+          district: response.data.user?.district || '',
+          state: response.data.user?.state || '',
+          pincode: response.data.user?.pincode || '',
+          preferredLanguage: response.data.user?.preferredLanguage || 'marathi',
+          notificationPreferences: response.data.user?.notificationPreferences || {
+            email: true,
+            sms: true,
+            push: true,
+            alerts: true,
+            reports: true
+          },
+          profileImage: response.data.user?.profileImage || ''
+        });
         setError(null);
       } catch (err) {
         setError('Failed to load profile');
@@ -26,64 +58,611 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  if (error) return <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>;
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    
+    if (name.startsWith('notification.')) {
+      // Handle notification preferences
+      const notificationType = name.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        notificationPreferences: {
+          ...prev.notificationPreferences,
+          [notificationType]: checked
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
+    
+    // Clear validation error for this field
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!formData.name.trim()) {
+      errors.name = 'नाव आवश्यक आहे';
+    }
+    
+    if (!formData.email.trim()) {
+      errors.email = 'ईमेल आवश्यक आहे';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'वैध ईमेल पता प्रविष्ट करा';
+    }
+    
+    if (formData.phoneNumber && !/^[0-9]{10}$/.test(formData.phoneNumber)) {
+      errors.phoneNumber = 'वैध फोन नंबर प्रविष्ट करा (10 अंक)';
+    }
+    
+    if (formData.pincode && !/^[0-9]{6}$/.test(formData.pincode)) {
+      errors.pincode = 'वैध पिनकोड प्रविष्ट करा (6 अंक)';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSave = async () => {
+    if (!validateForm()) return;
+
+    try {
+      setSaving(true);
+      await apiRoutes.updateProfile(formData);
+      
+      // Update local profile state
+      setProfile(prev => ({
+        ...prev,
+        ...formData
+      }));
+      
+      setIsEditing(false);
+      setSuccessMessage('प्रोफाइल यशस्वीरित्या अपडेट केले!');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setError('प्रोफाइल अपडेट करताना त्रुटी आली');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setValidationErrors({});
+    // Reset form data to original profile
+    setFormData({
+      name: profile?.name || '',
+      email: profile?.email || '',
+      phoneNumber: profile?.phoneNumber || '',
+      address: profile?.address || '',
+      village: profile?.village || '',
+      district: profile?.district || '',
+      state: profile?.state || '',
+      pincode: profile?.pincode || '',
+      preferredLanguage: profile?.preferredLanguage || 'marathi',
+      notificationPreferences: profile?.notificationPreferences || {
+        email: true,
+        sms: true,
+        push: true,
+        alerts: true,
+        reports: true
+      },
+      profileImage: profile?.profileImage || ''
+    });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData(prev => ({
+          ...prev,
+          profileImage: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handlePasswordChangeSuccess = () => {
+    setSuccessMessage('पासवर्ड यशस्वीरित्या बदलला!');
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
+  if (loading) return (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex justify-center items-center min-h-screen text-red-500">
+      <div className="text-center">
+        <div className="text-xl font-bold mb-2">त्रुटी</div>
+        <div>{error}</div>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+        >
+          पुन्हा प्रयत्न करा
+        </button>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F9FAF6] to-[#F5E9DA] flex items-center justify-center font-sans">
-      <div className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-lg flex flex-col items-center border-2 border-green-200">
-        <div className="w-full mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F9FAF6] to-[#F5E9DA] py-8 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
           <Link to="/" className="flex items-center text-green-700 hover:text-green-900 transition-colors">
             <FiArrowLeft className="mr-2" />
             डॅशबोर्डकडे परत जा
           </Link>
+          <div className="flex items-center space-x-4">
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <FiEdit3 className="mr-2" />
+                संपादित करा
+              </button>
+            )}
         </div>
-        <div className="bg-green-100 rounded-full p-4 mb-4">
-          <FiUser className="text-green-700 text-5xl" />
         </div>
-        <h2 className="text-2xl font-bold text-green-900 mb-2 font-[Mukta]">माझे प्रोफाइल</h2>
-        <div className="w-full mt-4 space-y-3">
-          <div className="flex justify-between border-b pb-2">
-            <span className="text-gray-600 font-semibold">नाव:</span>
-            <span className="text-green-900 font-bold">{profile?.name}</span>
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            {successMessage}
           </div>
-          <div className="flex justify-between border-b pb-2">
-            <span className="text-gray-600 font-semibold">ईमेल:</span>
-            <span className="text-green-900 font-bold">{profile?.email}</span>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <span className="text-gray-600 font-semibold">फोन:</span>
-            <span className="text-green-900 font-bold">{profile?.phoneNumber}</span>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <span className="text-gray-600 font-semibold">भूमिका:</span>
-            <span className="text-green-900 font-bold">{profile?.role}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600 font-semibold">भाषा:</span>
-            <span className="text-green-900 font-bold">{profile?.preferredLanguage === 'marathi' ? 'मराठी' : 'English'}</span>
-          </div>
-        </div>
-      </div>
-      {/* Fields Section */}
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mt-8 border-2 border-green-200">
-        <h3 className="text-xl font-bold text-green-800 mb-4">Fields</h3>
-        {fields.length === 0 ? (
-          <div className="text-gray-500">No fields found for your profile.</div>
-        ) : (
-          <ul className="space-y-4">
-            {fields.map((field) => (
-              <li key={field._id} className="border-b pb-2">
-                <div className="font-semibold text-green-900">{field.name}</div>
-                <div className="text-sm text-gray-700">Location: {field.location?.address?.village || ''}, {field.location?.address?.district || ''}, {field.location?.address?.state || ''}</div>
-                <div className="text-sm text-gray-700">Area: {field.location?.area?.value} {field.location?.area?.unit}</div>
-                <div className="text-sm text-gray-700">Current Crop: {field.currentCrop?.name || 'N/A'}</div>
-                <div className="text-sm text-gray-700">Status: {field.status}</div>
-              </li>
-            ))}
-          </ul>
         )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Profile Card */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-200">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-green-900 font-[Mukta]">
+                  {isEditing ? 'प्रोफाइल संपादित करा' : 'माझे प्रोफाइल'}
+                </h2>
+                {isEditing && (
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                    >
+                      <FiSave className="mr-2" />
+                      {saving ? 'सेव करत आहे...' : 'सेव करा'}
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                    >
+                      <FiX className="mr-2" />
+                      रद्द करा
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Profile Image */}
+              <div className="flex justify-center mb-8">
+                <div className="relative">
+                  <div className="w-32 h-32 rounded-full bg-green-100 flex items-center justify-center overflow-hidden">
+                    {formData.profileImage ? (
+                      <img 
+                        src={formData.profileImage} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <FiUser className="text-green-700 text-6xl" />
+                    )}
+                  </div>
+                  {isEditing && (
+                    <label className="absolute bottom-0 right-0 bg-green-600 text-white p-2 rounded-full cursor-pointer hover:bg-green-700">
+                      <FiCamera />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
+              </div>
+
+              {/* Profile Form */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-green-800 mb-4 flex items-center">
+                    <FiUser className="mr-2" />
+                    मूलभूत माहिती
+                  </h3>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      पूर्ण नाव *
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                          validationErrors.name ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="आपले पूर्ण नाव प्रविष्ट करा"
+                      />
+                    ) : (
+                      <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                        {profile?.name}
+                      </div>
+                    )}
+                    {validationErrors.name && (
+                      <p className="text-red-500 text-sm mt-1">{validationErrors.name}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      ईमेल *
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                          validationErrors.email ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="आपला ईमेल प्रविष्ट करा"
+                      />
+                    ) : (
+                      <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                        {profile?.email}
+                      </div>
+                    )}
+                    {validationErrors.email && (
+                      <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      फोन नंबर
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="tel"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                          validationErrors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="10 अंकांचा फोन नंबर"
+                      />
+                    ) : (
+                      <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                        {profile?.phoneNumber || 'निर्दिष्ट नाही'}
+                      </div>
+                    )}
+                    {validationErrors.phoneNumber && (
+                      <p className="text-red-500 text-sm mt-1">{validationErrors.phoneNumber}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      भूमिका
+                    </label>
+                    <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                      {profile?.role}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Address Information */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-green-800 mb-4 flex items-center">
+                    <FiMapPin className="mr-2" />
+                    पत्ता माहिती
+                  </h3>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      पूर्ण पत्ता
+                    </label>
+                    {isEditing ? (
+                      <textarea
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        rows="3"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        placeholder="आपला पूर्ण पत्ता प्रविष्ट करा"
+                      />
+                    ) : (
+                      <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                        {profile?.address || 'निर्दिष्ट नाही'}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        गाव
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="village"
+                          value={formData.village}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="गावाचे नाव"
+                        />
+                      ) : (
+                        <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                          {profile?.village || 'निर्दिष्ट नाही'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        जिल्हा
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="district"
+                          value={formData.district}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="जिल्ह्याचे नाव"
+                        />
+                      ) : (
+                        <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                          {profile?.district || 'निर्दिष्ट नाही'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        राज्य
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          placeholder="राज्याचे नाव"
+                        />
+                      ) : (
+                        <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                          {profile?.state || 'निर्दिष्ट नाही'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        पिनकोड
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="pincode"
+                          value={formData.pincode}
+                          onChange={handleInputChange}
+                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                            validationErrors.pincode ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="6 अंकांचा पिनकोड"
+                        />
+                      ) : (
+                        <div className="px-3 py-2 bg-gray-50 rounded-lg text-green-900 font-semibold">
+                          {profile?.pincode || 'निर्दिष्ट नाही'}
+                        </div>
+                      )}
+                      {validationErrors.pincode && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.pincode}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preferences */}
+              {isEditing && (
+                <div className="mt-8 space-y-4">
+                  <h3 className="text-xl font-semibold text-green-800 mb-4 flex items-center">
+                    <FiGlobe className="mr-2" />
+                    प्राधान्ये
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        पसंतीची भाषा
+                      </label>
+                      <select
+                        name="preferredLanguage"
+                        value={formData.preferredLanguage}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      >
+                        <option value="marathi">मराठी</option>
+                        <option value="english">English</option>
+                        <option value="hindi">हिंदी</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        सूचना प्राधान्ये
+                      </label>
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            name="notification.email"
+                            checked={formData.notificationPreferences?.email || false}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 block text-sm text-gray-700">
+                            ईमेल सूचना
+                          </label>
+                        </div>
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            name="notification.sms"
+                            checked={formData.notificationPreferences?.sms || false}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 block text-sm text-gray-700">
+                            SMS सूचना
+                          </label>
+                        </div>
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            name="notification.push"
+                            checked={formData.notificationPreferences?.push || false}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 block text-sm text-gray-700">
+                            पुश सूचना
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Fields Section */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-green-200">
+              <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center">
+                <FiMapPin className="mr-2" />
+                माझी शेते
+              </h3>
+              {fields.length === 0 ? (
+                <div className="text-gray-500 text-center py-8">
+                  <FiMapPin className="text-4xl mx-auto mb-4 text-gray-300" />
+                  <p>आपल्याकडे अजून शेते नाहीत</p>
+                  <Link 
+                    to="/add-field" 
+                    className="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  >
+                    शेत जोडा
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {fields.map((field) => (
+                    <div key={field._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="font-semibold text-green-900 mb-2">{field.name}</div>
+                      <div className="text-sm text-gray-600 space-y-1">
+                        <div>स्थान: {field.location?.address?.village || ''}, {field.location?.address?.district || ''}</div>
+                        <div>क्षेत्र: {field.location?.area?.value} {field.location?.area?.unit}</div>
+                        <div>सध्याचे पीक: {field.currentCrop?.name || 'N/A'}</div>
+                        <div className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                          field.status === 'Healthy' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
+                        }`}>
+                          स्थिती: {field.status}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Security Section */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 mt-6 border-2 border-green-200">
+              <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center">
+                <FiShield className="mr-2" />
+                सुरक्षा
+              </h3>
+              <div className="space-y-3">
+                <button 
+                  onClick={() => setShowPasswordModal(true)}
+                  className="w-full text-left px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <div className="font-semibold text-gray-900">पासवर्ड बदला</div>
+                  <div className="text-sm text-gray-600">आपला पासवर्ड अपडेट करा</div>
+                </button>
+                <button 
+                  onClick={() => setShowTwoFactorModal(true)}
+                  className="w-full text-left px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <div className="font-semibold text-gray-900">दोन-फॅक्टर प्रमाणीकरण</div>
+                  <div className="text-sm text-gray-600">अतिरिक्त सुरक्षा सक्षम करा</div>
+                </button>
+                <button 
+                  onClick={() => setShowLoginHistoryModal(true)}
+                  className="w-full text-left px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <div className="font-semibold text-gray-900">लॉगिन इतिहास</div>
+                  <div className="text-sm text-gray-600">आपल्या लॉगिन क्रियाकलाप पहा</div>
+                </button>
+          </div>
+          </div>
+          </div>
+        </div>
       </div>
+
+      {/* Security Modals */}
+      <PasswordChangeModal 
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSuccess={handlePasswordChangeSuccess}
+      />
+      
+      <TwoFactorAuth 
+        isOpen={showTwoFactorModal}
+        onClose={() => setShowTwoFactorModal(false)}
+      />
+      
+      <LoginHistory 
+        isOpen={showLoginHistoryModal}
+        onClose={() => setShowLoginHistoryModal(false)}
+      />
     </div>
   );
 };

@@ -5,10 +5,24 @@ const apiRoutes = {
   login: (email, password) => api.post('/auth/login', { email, password }),
   register: (userData) => api.post('/auth/register', userData),
   getProfile: () => api.get('/auth/profile'),
-  updateProfile: (data) => api.put('/auth/profile', data),
+  updateProfile: (data) => api.patch('/auth/profile', data),
+  changePassword: (currentPassword, newPassword) => api.post('/auth/change-password', { currentPassword, newPassword }),
   logout: (refreshToken) => api.post('/auth/logout', { refreshToken }),
   refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken }),
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+
+  // Two-Factor Authentication
+  getTwoFactorStatus: () => api.get('/auth/2fa/status'),
+  setupTwoFactor: () => api.post('/auth/2fa/setup'),
+  verifyTwoFactor: (code) => api.post('/auth/2fa/verify', { code }),
+  disableTwoFactor: () => api.post('/auth/2fa/disable'),
+  verifyBackupCode: (code) => api.post('/auth/2fa/backup', { code }),
+
+  // Login History & Security
+  getLoginHistory: () => api.get('/auth/login-history'),
+  revokeSession: (sessionId) => api.delete(`/auth/sessions/${sessionId}`),
+  reportSuspiciousActivity: (sessionId) => api.post(`/auth/suspicious/${sessionId}`),
+  getActiveSessions: () => api.get('/auth/sessions/active'),
 
   // Sensor Data
   getSensorData: () => api.get('/sensor-data'),

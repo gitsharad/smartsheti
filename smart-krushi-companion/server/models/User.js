@@ -55,8 +55,29 @@ const userSchema = new mongoose.Schema({
   },
   preferredLanguage: {
     type: String,
-    enum: ['english', 'marathi'],
+    enum: ['english', 'marathi', 'hindi'],
     default: 'marathi'
+  },
+  // Enhanced location and address information
+  address: {
+    type: String,
+    trim: true
+  },
+  village: {
+    type: String,
+    trim: true
+  },
+  district: {
+    type: String,
+    trim: true
+  },
+  state: {
+    type: String,
+    trim: true
+  },
+  pincode: {
+    type: String,
+    match: [/^[0-9]{6}$/, 'Pincode must be 6 digits']
   },
   // Location and personal info
   location: {
@@ -67,6 +88,11 @@ const userSchema = new mongoose.Schema({
       lat: Number,
       lng: Number
     }
+  },
+  // Profile image
+  profileImage: {
+    type: String,
+    trim: true
   },
   // Profile information
   profile: {
@@ -129,7 +155,7 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   passwordChangedAt: Date,
   // Notification preferences
-  notifications: {
+  notificationPreferences: {
     email: { type: Boolean, default: true },
     sms: { type: Boolean, default: true },
     push: { type: Boolean, default: true },
@@ -145,6 +171,7 @@ userSchema.index({ role: 1, isActive: 1 });
 userSchema.index({ managedBy: 1 });
 userSchema.index({ email: 1 });
 userSchema.index({ 'location.district': 1, 'location.village': 1 });
+userSchema.index({ village: 1, district: 1, state: 1 });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
@@ -206,93 +233,51 @@ userSchema.methods.generateRefreshToken = function() {
 
 // Create password reset token
 userSchema.methods.createPasswordResetToken = function() {
-  // Generate random reset token
   const resetToken = crypto.randomBytes(32).toString('hex');
-
-  // Hash token and set to resetPasswordToken field
+  
   this.passwordResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-
-  // Set expire time to 1 hour
-  this.passwordResetExpires = Date.now() + 3600000;
-
+    
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+  
   return resetToken;
 };
 
-// Check if token was issued before password change
-userSchema.methods.hasPasswordChangedAfterToken = function(tokenIssuedAt) {
+// Check if password was changed after token was issued
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   if (this.passwordChangedAt) {
-    const changedTimestamp = this.passwordChangedAt.getTime() / 1000;
-    return tokenIssuedAt < changedTimestamp;
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+    return JWTTimestamp < changedTimestamp;
   }
   return false;
 };
 
-// Get all users managed by this user (recursive)
-userSchema.methods.getManagedUsers = async function() {
-  const managedUsers = await this.populate('managedUsers');
-  const allManaged = [...managedUsers.managedUsers];
-  
-  // Recursively get users managed by managed users
-  for (const user of managedUsers.managedUsers) {
-    const subManaged = await user.getManagedUsers();
-    allManaged.push(...subManaged);
-  }
-  
-  return allManaged;
-};
+// Virtual for user's full address
+userSchema.virtual('fullAddress').get(function() {
+  const parts = [];
+  if (this.address) parts.push(this.address);
+  if (this.village) parts.push(this.village);
+  if (this.district) parts.push(this.district);
+  if (this.state) parts.push(this.state);
+  if (this.pincode) parts.push(this.pincode);
+  return parts.join(', ');
+});
 
-// Get all fields accessible to this user
-userSchema.methods.getAccessibleFields = async function() {
-  let fields = [];
-  
-  // Get owned fields
-  if (this.ownedFields.length > 0) {
-    fields.push(...this.ownedFields);
-  }
-  
-  // Get assigned fields
-  if (this.assignedFields.length > 0) {
-    fields.push(...this.assignedFields);
-  }
-  
-  // If coordinator or admin, get fields of managed users
-  if (this.role === 'coordinator' || this.role === 'admin') {
-    const managedUsers = await this.getManagedUsers();
-    for (const user of managedUsers) {
-      fields.push(...user.ownedFields, ...user.assignedFields);
-    }
-  }
-  
-  return [...new Set(fields)]; // Remove duplicates
-};
+// Virtual for notifications (compatibility with frontend)
+userSchema.virtual('notifications').get(function() {
+  return this.notificationPreferences && 
+         (this.notificationPreferences.email || 
+          this.notificationPreferences.sms || 
+          this.notificationPreferences.push || 
+          this.notificationPreferences.alerts || 
+          this.notificationPreferences.reports);
+});
 
-// Check if user can access a specific field
-userSchema.methods.canAccessField = function(fieldId) {
-  // Admin can access all fields
-  if (this.role === 'admin') return true;
-  
-  // Check owned fields
-  if (this.ownedFields.includes(fieldId)) return true;
-  
-  // Check assigned fields
-  if (this.assignedFields.includes(fieldId)) return true;
-  
-  return false;
-};
-
-// Remove sensitive fields when converting to JSON
-userSchema.methods.toJSON = function() {
-  const userObject = this.toObject();
-  delete userObject.password;
-  delete userObject.passwordResetToken;
-  delete userObject.passwordResetExpires;
-  delete userObject.passwordChangedAt;
-  delete userObject.__v;
-  return userObject;
-};
+// Ensure virtual fields are serialized
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 const User = mongoose.model('User', userSchema);
 
