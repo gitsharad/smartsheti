@@ -117,12 +117,31 @@ const Profile = () => {
 
     try {
       setSaving(true);
-      await apiRoutes.updateProfile(formData);
+      
+      // Create a clean object with only the fields we want to update
+      const updateData = {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+        village: formData.village,
+        district: formData.district,
+        state: formData.state,
+        pincode: formData.pincode,
+        preferredLanguage: formData.preferredLanguage,
+        notificationPreferences: formData.notificationPreferences,
+        profileImage: formData.profileImage
+      };
+      
+      // Log what we're sending to the server
+      console.log('Sending profile update data:', updateData);
+      
+      await apiRoutes.updateProfile(updateData);
       
       // Update local profile state
       setProfile(prev => ({
         ...prev,
-        ...formData
+        ...updateData
       }));
       
       setIsEditing(false);
@@ -131,6 +150,7 @@ const Profile = () => {
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
+      console.error('Profile update error:', err.response?.data || err);
       setError('प्रोफाइल अपडेट करताना त्रुटी आली');
     } finally {
       setSaving(false);

@@ -40,31 +40,81 @@ const updateProfile = async (req, res) => {
   
   // Enhanced allowed updates to include all profile fields
   const allowedUpdates = [
+    // Basic profile fields
     'name', 
     'email',
     'phoneNumber', 
     'preferredLanguage', 
     'password',
+    
+    // Address fields
     'address',
     'village',
     'district', 
     'state',
     'pincode',
+    
+    // Profile fields
     'profileImage',
     'location',
-    'notificationPreferences'
+    'notificationPreferences',
+    'notifications', // Backward compatibility
+    
+    // User model fields
+    'profile',
+    'deviceInfo',
+    'permissions',
+    'isActive',
+    'isVerified',
+    'lastLogin',
+    'lastActive',
+    
+    // Role and management fields
+    'role',
+    'managedBy',
+    'managedUsers',
+    'assignedFields',
+    'ownedFields',
+    
+    // Security fields
+    'passwordResetToken',
+    'passwordResetExpires',
+    'passwordChangedAt',
+    
+    // Timestamps (should not be updated but included for safety)
+    'createdAt',
+    'updatedAt'
   ];
   
-  const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+  // Log the incoming request for debugging
+  logger.info('Profile update request:', {
+    userId: req.user._id,
+    requestedUpdates: updates,
+    allowedUpdates: allowedUpdates,
+    body: req.body
+  });
+
+  // Check if all requested fields are allowed
+  const invalidFields = updates.filter(update => !allowedUpdates.includes(update));
+  const isValidOperation = invalidFields.length === 0;
 
   if (!isValidOperation) {
+    logger.warn('Invalid profile update fields:', {
+      userId: req.user._id,
+      invalidFields: invalidFields,
+      requestedUpdates: updates,
+      body: req.body
+    });
+    
     return res.status(400).json({
       error: 'Invalid updates',
       message: {
         english: 'Some update fields are not allowed',
         marathi: 'काही अपडेट फील्ड्स अनुमत नाहीत'
       },
-      invalidFields: updates.filter(update => !allowedUpdates.includes(update))
+      invalidFields: invalidFields,
+      allowedFields: allowedUpdates,
+      receivedFields: updates
     });
   }
 
@@ -98,10 +148,28 @@ const updateProfile = async (req, res) => {
       delete req.body.notificationPreferences; // Remove from body to avoid double assignment
     }
 
+    // Handle notifications field (backward compatibility)
+    if (req.body.notifications !== undefined) {
+      // Convert simple notifications boolean to notificationPreferences structure
+      if (typeof req.body.notifications === 'boolean') {
+        req.user.notificationPreferences = {
+          email: req.body.notifications,
+          sms: req.body.notifications,
+          push: req.body.notifications,
+          alerts: req.body.notifications,
+          reports: req.body.notifications
+        };
+      }
+      delete req.body.notifications; // Remove from body to avoid double assignment
+    }
+
     // Update all other fields
     updates.forEach(update => {
-      if (update !== 'password' && update !== 'notificationPreferences') { // Skip handled fields
-        req.user[update] = req.body[update];
+      if (update !== 'password' && update !== 'notificationPreferences' && update !== 'notifications') { // Skip handled fields
+        // Only update if the field exists in the user model or is a safe field
+        if (req.user[update] !== undefined || allowedUpdates.includes(update)) {
+          req.user[update] = req.body[update];
+        }
       }
     });
 
@@ -243,9 +311,28 @@ const getUserActivity = async (req, res) => {
   }
 };
 
+// Debug endpoint to test profile updates
+const debugProfileUpdate = async (req, res) => {
+  logger.info('Debug profile update request:', {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    body: req.body,
+    user: req.user ? req.user._id : 'No user'
+  });
+  
+  res.json({
+    message: 'Debug endpoint called',
+    receivedData: req.body,
+    userFields: Object.keys(req.user || {}),
+    timestamp: new Date()
+  });
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   changePassword,
-  getUserActivity
+  getUserActivity,
+  debugProfileUpdate
 }; 
