@@ -250,6 +250,9 @@ const Profile = () => {
     try {
       console.log('Testing API connectivity...');
       console.log('Current URL:', window.location.href);
+      console.log('Origin:', window.location.origin);
+      console.log('Hostname:', window.location.hostname);
+      console.log('Protocol:', window.location.protocol);
       console.log('API Base URL:', window.location.origin + '/api/v1');
       
       // Test basic connectivity
@@ -292,6 +295,21 @@ const Profile = () => {
         }
       } catch (error) {
         console.error('CORS test failed:', error);
+      }
+      
+      // Test CORS configuration
+      try {
+        const corsConfigResponse = await api.get('/cors-config');
+        console.log('CORS config response status:', corsConfigResponse.status);
+        if (corsConfigResponse.status === 200) {
+          const corsConfigData = corsConfigResponse.data;
+          console.log('CORS config response:', corsConfigData);
+        } else {
+          const corsConfigText = corsConfigResponse.data;
+          console.log('CORS config error:', corsConfigText);
+        }
+      } catch (error) {
+        console.error('CORS config test failed:', error);
       }
       
       // Test profile endpoint

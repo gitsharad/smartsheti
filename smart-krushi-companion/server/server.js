@@ -68,8 +68,14 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
   // Basic middleware
   const corsOptions = {
     origin: function (origin, callback) {
+      // Log all origin requests for debugging
+      console.log('CORS request from origin:', origin);
+      
       // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('Allowing request with no origin');
+        return callback(null, true);
+      }
       
       // For now, allow all origins to fix the immediate issue
       console.log('Allowing origin:', origin);
@@ -147,6 +153,18 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
       message: 'CORS test successful',
       origin: req.headers.origin,
       host: req.headers.host,
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  // CORS configuration check endpoint
+  app.get('/api/v1/cors-config', (req, res) => {
+    res.json({
+      message: 'CORS configuration',
+      currentOrigin: req.headers.origin,
+      nodeEnv: process.env.NODE_ENV,
+      frontendUrl: process.env.FRONTEND_URL,
+      allowAllOrigins: process.env.ALLOW_ALL_ORIGINS,
       timestamp: new Date().toISOString()
     });
   });
