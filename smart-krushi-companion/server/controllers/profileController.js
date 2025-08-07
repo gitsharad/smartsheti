@@ -198,10 +198,26 @@ const updateProfile = async (req, res) => {
 
     // Handle notificationPreferences update
     if (req.body.notificationPreferences) {
+      // Ensure notificationPreferences is properly structured
+      const currentPrefs = req.user.notificationPreferences || {};
+      const newPrefs = req.body.notificationPreferences;
+      
+      // Merge the preferences properly
       req.user.notificationPreferences = {
-        ...req.user.notificationPreferences,
-        ...req.body.notificationPreferences
+        email: newPrefs.email !== undefined ? newPrefs.email : currentPrefs.email,
+        sms: newPrefs.sms !== undefined ? newPrefs.sms : currentPrefs.sms,
+        push: newPrefs.push !== undefined ? newPrefs.push : currentPrefs.push,
+        alerts: newPrefs.alerts !== undefined ? newPrefs.alerts : currentPrefs.alerts,
+        reports: newPrefs.reports !== undefined ? newPrefs.reports : currentPrefs.reports
       };
+      
+      logger.info('Updated notification preferences:', {
+        userId: req.user._id,
+        oldPrefs: currentPrefs,
+        newPrefs: newPrefs,
+        finalPrefs: req.user.notificationPreferences
+      });
+      
       delete req.body.notificationPreferences; // Remove from body to avoid double assignment
     }
 
@@ -478,6 +494,25 @@ const echoProfileData = async (req, res) => {
   });
 };
 
+// Simple test endpoint to echo back data
+const testEchoSimple = async (req, res) => {
+  logger.info('Simple echo test:', {
+    method: req.method,
+    url: req.url,
+    body: req.body,
+    bodyKeys: Object.keys(req.body),
+    bodyType: typeof req.body
+  });
+  
+  res.json({
+    message: 'Simple echo successful',
+    receivedData: req.body,
+    bodyKeys: Object.keys(req.body),
+    bodyType: typeof req.body,
+    timestamp: new Date().toISOString()
+  });
+};
+
 module.exports = {
   getProfile,
   updateProfile,
@@ -485,5 +520,6 @@ module.exports = {
   getUserActivity,
   debugProfileUpdate,
   testProfileUpdate,
-  echoProfileData
+  echoProfileData,
+  testEchoSimple
 }; 

@@ -276,6 +276,25 @@ const Profile = () => {
     }
   };
 
+  // Test function for simple echo
+  const testSimpleEcho = async () => {
+    try {
+      const simpleData = {
+        name: "Test User",
+        email: "test@example.com",
+        notificationPreferences: {
+          email: true,
+          sms: false
+        }
+      };
+      console.log('Testing simple echo with data:', simpleData);
+      const response = await api.post('/auth/profile-echo-simple', simpleData);
+      console.log('Simple echo response:', response.data);
+    } catch (error) {
+      console.error('Simple echo test error:', error);
+    }
+  };
+
   // Test backend connectivity
   const testBackendConnectivity = async () => {
     try {
@@ -437,6 +456,12 @@ const Profile = () => {
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Test Profile Data
+            </button>
+            <button
+              onClick={testSimpleEcho}
+              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Test Simple Echo
             </button>
             <button
               onClick={testApiConnectivity}
