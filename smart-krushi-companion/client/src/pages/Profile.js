@@ -405,6 +405,31 @@ const Profile = () => {
     }
   };
 
+  // Test function to check server endpoints
+  const testServerEndpoints = async () => {
+    const endpoints = [
+      '/auth/profile',
+      '/auth/profile-echo',
+      '/auth/profile-echo-simple',
+      '/auth/profile-test',
+      '/test',
+      '/cors-test',
+      '/cors-config',
+      '/health'
+    ];
+    
+    console.log('Testing server endpoints...');
+    
+    for (const endpoint of endpoints) {
+      try {
+        const response = await api.get(endpoint);
+        console.log(`✅ ${endpoint}: ${response.status}`);
+      } catch (error) {
+        console.log(`❌ ${endpoint}: ${error.response?.status || 'Network Error'}`);
+      }
+    }
+  };
+
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
@@ -474,6 +499,12 @@ const Profile = () => {
               className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
             >
               Test Backend
+            </button>
+            <button
+              onClick={testServerEndpoints}
+              className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Test Server Endpoints
             </button>
         </div>
         </div>
