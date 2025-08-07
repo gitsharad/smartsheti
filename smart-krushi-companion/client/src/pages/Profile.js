@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiRoutes from '../services/apiRoutes';
+import { api } from '../services/authService';
 import { FiUser, FiArrowLeft, FiEdit3, FiSave, FiX, FiCamera, FiMapPin, FiPhone, FiMail, FiGlobe, FiShield } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import PasswordChangeModal from '../components/PasswordChangeModal';
@@ -214,18 +215,33 @@ const Profile = () => {
         phoneNumber: "1234567890"
       };
       console.log('Testing echo with data:', testData);
-      const response = await fetch('/api/v1/auth/profile-echo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify(testData)
-      });
-      const result = await response.json();
-      console.log('Echo response:', result);
+      const response = await api.post('/auth/profile-echo', testData);
+      console.log('Echo response:', response.data);
     } catch (error) {
       console.error('Echo test error:', error);
+    }
+  };
+
+  // Test backend connectivity
+  const testBackendConnectivity = async () => {
+    try {
+      console.log('Testing backend connectivity...');
+      
+      // Test direct backend connection
+      const directResponse = await api.get('/test');
+      console.log('Direct backend response:', directResponse.status);
+      
+      if (directResponse.status === 200) {
+        const data = directResponse.data;
+        console.log('Direct backend data:', data);
+      } else {
+        const text = directResponse.data;
+        console.log('Direct backend error:', text);
+      }
+      
+    } catch (error) {
+      console.error('Direct backend test failed:', error);
+      console.log('This might mean the backend server is not running on port 5000');
     }
   };
 
@@ -237,26 +253,61 @@ const Profile = () => {
       console.log('API Base URL:', window.location.origin + '/api/v1');
       
       // Test basic connectivity
-      const healthResponse = await fetch('/api/v1/health');
-      console.log('Health check response:', healthResponse.status);
+      try {
+        const healthResponse = await api.get('/health');
+        console.log('Health check response:', healthResponse.status);
+        if (healthResponse.status !== 200) {
+          const healthText = healthResponse.data;
+          console.log('Health check error:', healthText);
+        }
+      } catch (error) {
+        console.error('Health check failed:', error);
+      }
       
       // Test simple endpoint
-      const testResponse = await fetch('/api/v1/test');
-      const testData = await testResponse.json();
-      console.log('Simple test response:', testData);
+      try {
+        const testResponse = await api.get('/test');
+        console.log('Test response status:', testResponse.status);
+        if (testResponse.status === 200) {
+          const testData = testResponse.data;
+          console.log('Simple test response:', testData);
+        } else {
+          const testText = testResponse.data;
+          console.log('Test endpoint error:', testText);
+        }
+      } catch (error) {
+        console.error('Test endpoint failed:', error);
+      }
       
       // Test CORS
-      const corsResponse = await fetch('/api/v1/cors-test');
-      const corsData = await corsResponse.json();
-      console.log('CORS test response:', corsData);
+      try {
+        const corsResponse = await api.get('/cors-test');
+        console.log('CORS response status:', corsResponse.status);
+        if (corsResponse.status === 200) {
+          const corsData = corsResponse.data;
+          console.log('CORS test response:', corsData);
+        } else {
+          const corsText = corsResponse.data;
+          console.log('CORS test error:', corsText);
+        }
+      } catch (error) {
+        console.error('CORS test failed:', error);
+      }
       
       // Test profile endpoint
-      const profileResponse = await fetch('/api/v1/auth/profile', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      try {
+        const token = localStorage.getItem('accessToken');
+        console.log('Token available:', !!token);
+        
+        const profileResponse = await api.get('/auth/profile');
+        console.log('Profile check response:', profileResponse.status);
+        if (profileResponse.status !== 200) {
+          const profileText = profileResponse.data;
+          console.log('Profile endpoint error:', profileText);
         }
-      });
-      console.log('Profile check response:', profileResponse.status);
+      } catch (error) {
+        console.error('Profile endpoint failed:', error);
+      }
       
     } catch (error) {
       console.error('API connectivity test failed:', error);
@@ -314,6 +365,12 @@ const Profile = () => {
               className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
               Test API
+            </button>
+            <button
+              onClick={testBackendConnectivity}
+              className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Test Backend
             </button>
         </div>
         </div>
