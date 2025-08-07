@@ -1,9 +1,27 @@
 import axios from 'axios';
 
-// Use full backend URL for development to avoid proxy issues
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? (process.env.REACT_APP_API_URL + '/api/v1')
-  : 'http://localhost:5000/api/v1';
+// Use the same API configuration as the rest of the app
+const getApiUrl = () => {
+  // Check if we're in production
+  if (process.env.NODE_ENV === 'production') {
+    const prodUrl = process.env.REACT_APP_API_URL 
+      ? `${process.env.REACT_APP_API_URL}/api/v1`
+      : 'https://api.smartsheti.com/api/v1';
+    console.log('Production API URL:', prodUrl);
+    return prodUrl;
+  }
+  
+  // Development: use proxy or localhost
+  const devUrl = '/api/v1'; // This will be proxied to localhost:5000
+  console.log('Development API URL:', devUrl);
+  return devUrl;
+};
+
+const API_URL = getApiUrl();
+
+console.log('Final API URL:', API_URL);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
 
 // Create axios instance with base URL
 const api = axios.create({

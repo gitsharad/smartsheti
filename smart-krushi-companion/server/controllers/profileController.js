@@ -36,91 +36,116 @@ const getProfile = async (req, res) => {
 
 // Update user profile
 const updateProfile = async (req, res) => {
-  const updates = Object.keys(req.body);
-  
-  // Enhanced allowed updates to include all profile fields
-  const allowedUpdates = [
-    // Basic profile fields
-    'name', 
-    'email',
-    'phoneNumber', 
-    'preferredLanguage', 
-    'password',
-    
-    // Address fields
-    'address',
-    'village',
-    'district', 
-    'state',
-    'pincode',
-    
-    // Profile fields
-    'profileImage',
-    'location',
-    'notificationPreferences',
-    'notifications', // Backward compatibility
-    
-    // User model fields
-    'profile',
-    'deviceInfo',
-    'permissions',
-    'isActive',
-    'isVerified',
-    'lastLogin',
-    'lastActive',
-    
-    // Role and management fields
-    'role',
-    'managedBy',
-    'managedUsers',
-    'assignedFields',
-    'ownedFields',
-    
-    // Security fields
-    'passwordResetToken',
-    'passwordResetExpires',
-    'passwordChangedAt',
-    
-    // Timestamps (should not be updated but included for safety)
-    'createdAt',
-    'updatedAt'
-  ];
-  
-  // Log the incoming request for debugging
-  logger.info('Profile update request:', {
-    userId: req.user._id,
-    requestedUpdates: updates,
-    allowedUpdates: allowedUpdates,
-    bodyKeys: Object.keys(req.body),
-    hasProfileImage: !!req.body.profileImage,
-    profileImageLength: req.body.profileImage ? req.body.profileImage.length : 0
-  });
-
-  // Check if all requested fields are allowed
-  const invalidFields = updates.filter(update => !allowedUpdates.includes(update));
-  const isValidOperation = invalidFields.length === 0;
-
-  if (!isValidOperation) {
-    logger.warn('Invalid profile update fields:', {
-      userId: req.user._id,
-      invalidFields: invalidFields,
-      requestedUpdates: updates,
-      body: req.body
-    });
-    
-    return res.status(400).json({
-      error: 'Invalid updates',
-      message: {
-        english: 'Some update fields are not allowed',
-        marathi: 'काही अपडेट फील्ड्स अनुमत नाहीत'
-      },
-      invalidFields: invalidFields,
-      allowedFields: allowedUpdates,
-      receivedFields: updates
-    });
-  }
-
   try {
+    // Log the incoming request for debugging
+    logger.info('Profile update request received:', {
+      userId: req.user._id,
+      method: req.method,
+      url: req.url,
+      bodyType: typeof req.body,
+      bodyKeys: Object.keys(req.body),
+      bodySample: JSON.stringify(req.body).substring(0, 200),
+      headers: req.headers
+    });
+
+    // Check if this looks like user profile data
+    const expectedProfileFields = ['name', 'email', 'phoneNumber', 'address', 'village', 'district', 'state', 'pincode', 'preferredLanguage', 'notificationPreferences', 'profileImage'];
+    const receivedFields = Object.keys(req.body);
+    const hasProfileFields = expectedProfileFields.some(field => receivedFields.includes(field));
+    
+    if (!hasProfileFields) {
+      logger.warn('Received data does not look like profile data:', {
+        userId: req.user._id,
+        receivedFields: receivedFields,
+        expectedFields: expectedProfileFields
+      });
+      
+      return res.status(400).json({
+        error: 'Invalid data format',
+        message: {
+          english: 'The data sent does not appear to be user profile data',
+          marathi: 'पाठवलेला डेटा वापरकर्ता प्रोफाइल डेटा नाही'
+        },
+        receivedFields: receivedFields,
+        expectedFields: expectedProfileFields,
+        debug: {
+          bodyType: typeof req.body,
+          bodySample: JSON.stringify(req.body).substring(0, 100)
+        }
+      });
+    }
+
+    // Enhanced allowed updates to include all profile fields
+    const allowedUpdates = [
+      // Basic profile fields
+      'name', 
+      'email',
+      'phoneNumber', 
+      'preferredLanguage', 
+      'password',
+      
+      // Address fields
+      'address',
+      'village',
+      'district', 
+      'state',
+      'pincode',
+      
+      // Profile fields
+      'profileImage',
+      'location',
+      'notificationPreferences',
+      'notifications', // Backward compatibility
+      
+      // User model fields
+      'profile',
+      'deviceInfo',
+      'permissions',
+      'isActive',
+      'isVerified',
+      'lastLogin',
+      'lastActive',
+      
+      // Role and management fields
+      'role',
+      'managedBy',
+      'managedUsers',
+      'assignedFields',
+      'ownedFields',
+      
+      // Security fields
+      'passwordResetToken',
+      'passwordResetExpires',
+      'passwordChangedAt',
+      
+      // Timestamps (should not be updated but included for safety)
+      'createdAt',
+      'updatedAt'
+    ];
+
+    // Check if all requested fields are allowed
+    const invalidFields = receivedFields.filter(field => !allowedUpdates.includes(field));
+    const isValidOperation = invalidFields.length === 0;
+
+    if (!isValidOperation) {
+      logger.warn('Invalid profile update fields:', {
+        userId: req.user._id,
+        invalidFields: invalidFields,
+        receivedFields: receivedFields
+      });
+      
+      return res.status(400).json({
+        error: 'Invalid updates',
+        message: {
+          english: 'Some update fields are not allowed',
+          marathi: 'काही अपडेट फील्ड्स अनुमत नाहीत'
+        },
+        invalidFields: invalidFields,
+        allowedFields: allowedUpdates,
+        receivedFields: receivedFields
+      });
+    }
+
     // Handle email update separately to check for duplicates
     if (req.body.email && req.body.email !== req.user.email) {
       const existingUser = await User.findOne({ email: req.body.email });
@@ -187,14 +212,14 @@ const updateProfile = async (req, res) => {
     }
 
     // Update all other fields
-    updates.forEach(update => {
-      if (update !== 'password' && 
-          update !== 'notificationPreferences' && 
-          update !== 'notifications' && 
-          update !== 'profileImage') { // Skip handled fields
+    receivedFields.forEach(field => {
+      if (field !== 'password' && 
+          field !== 'notificationPreferences' && 
+          field !== 'notifications' && 
+          field !== 'profileImage') { // Skip handled fields
         // Only update if the field exists in the user model or is a safe field
-        if (req.user[update] !== undefined || allowedUpdates.includes(update)) {
-          req.user[update] = req.body[update];
+        if (req.user[field] !== undefined || allowedUpdates.includes(field)) {
+          req.user[field] = req.body[field];
         }
       }
     });
@@ -237,7 +262,7 @@ const updateProfile = async (req, res) => {
     // Log the profile update
     logger.info(`Profile updated for user: ${req.user._id}`, {
       userId: req.user._id,
-      updatedFields: updates,
+      updatedFields: receivedFields,
       timestamp: new Date()
     });
 
@@ -247,7 +272,7 @@ const updateProfile = async (req, res) => {
         marathi: 'प्रोफाइल यशस्वीरित्या अपडेट झाले'
       },
       user: req.user,
-      updatedFields: updates
+      updatedFields: receivedFields
     });
   } catch (error) {
     logger.error('Update profile error:', error);
@@ -257,7 +282,8 @@ const updateProfile = async (req, res) => {
         english: 'Unable to update profile',
         marathi: 'प्रोफाइल अपडेट करण्यात अयशस्वी'
       },
-      details: error.message
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
@@ -400,11 +426,34 @@ const testProfileUpdate = async (req, res) => {
   }
 };
 
+// Echo endpoint to see what data is being sent
+const echoProfileData = async (req, res) => {
+  logger.info('Echo profile data request:', {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    body: req.body,
+    bodyType: typeof req.body,
+    bodyKeys: Object.keys(req.body),
+    user: req.user ? req.user._id : 'No user'
+  });
+  
+  res.json({
+    message: 'Echo endpoint called',
+    receivedData: req.body,
+    bodyType: typeof req.body,
+    bodyKeys: Object.keys(req.body),
+    userFields: Object.keys(req.user || {}),
+    timestamp: new Date()
+  });
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   changePassword,
   getUserActivity,
   debugProfileUpdate,
-  testProfileUpdate
+  testProfileUpdate,
+  echoProfileData
 }; 

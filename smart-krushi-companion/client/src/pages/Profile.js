@@ -135,6 +135,8 @@ const Profile = () => {
       
       // Log what we're sending to the server
       console.log('Sending profile update data:', updateData);
+      console.log('API URL being used:', window.location.origin + '/api/v1/auth/profile');
+      console.log('Environment:', process.env.NODE_ENV);
       
       await apiRoutes.updateProfile(updateData);
       
@@ -151,6 +153,8 @@ const Profile = () => {
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
       console.error('Profile update error:', err.response?.data || err);
+      console.error('Error status:', err.response?.status);
+      console.error('Error headers:', err.response?.headers);
       setError('प्रोफाइल अपडेट करताना त्रुटी आली');
     } finally {
       setSaving(false);
@@ -201,6 +205,54 @@ const Profile = () => {
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
+  // Test function to debug what's being sent
+  const testEcho = async () => {
+    try {
+      const testData = {
+        name: "Test User",
+        email: "test@example.com",
+        phoneNumber: "1234567890"
+      };
+      console.log('Testing echo with data:', testData);
+      const response = await fetch('/api/v1/auth/profile-echo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify(testData)
+      });
+      const result = await response.json();
+      console.log('Echo response:', result);
+    } catch (error) {
+      console.error('Echo test error:', error);
+    }
+  };
+
+  // Test API connectivity
+  const testApiConnectivity = async () => {
+    try {
+      console.log('Testing API connectivity...');
+      console.log('Current URL:', window.location.href);
+      console.log('API Base URL:', window.location.origin + '/api/v1');
+      
+      // Test basic connectivity
+      const healthResponse = await fetch('/api/v1/health');
+      console.log('Health check response:', healthResponse.status);
+      
+      // Test profile endpoint
+      const profileResponse = await fetch('/api/v1/auth/profile', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+      console.log('Profile check response:', profileResponse.status);
+      
+    } catch (error) {
+      console.error('API connectivity test failed:', error);
+    }
+  };
+
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
@@ -241,6 +293,18 @@ const Profile = () => {
                 संपादित करा
               </button>
             )}
+            <button
+              onClick={testEcho}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Test Echo
+            </button>
+            <button
+              onClick={testApiConnectivity}
+              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Test API
+            </button>
         </div>
         </div>
 
