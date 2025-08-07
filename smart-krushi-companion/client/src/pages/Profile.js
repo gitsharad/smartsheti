@@ -138,6 +138,13 @@ const Profile = () => {
       console.log('Sending profile update data:', updateData);
       console.log('API URL being used:', window.location.origin + '/api/v1/auth/profile');
       console.log('Environment:', process.env.NODE_ENV);
+      console.log('Current origin:', window.location.origin);
+      console.log('Current hostname:', window.location.hostname);
+      
+      // Test the data structure
+      console.log('Data type:', typeof updateData);
+      console.log('Data keys:', Object.keys(updateData));
+      console.log('Data stringified:', JSON.stringify(updateData, null, 2));
       
       await apiRoutes.updateProfile(updateData);
       
@@ -156,6 +163,7 @@ const Profile = () => {
       console.error('Profile update error:', err.response?.data || err);
       console.error('Error status:', err.response?.status);
       console.error('Error headers:', err.response?.headers);
+      console.error('Full error object:', err);
       setError('प्रोफाइल अपडेट करताना त्रुटी आली');
     } finally {
       setSaving(false);

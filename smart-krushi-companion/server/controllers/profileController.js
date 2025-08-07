@@ -127,11 +127,37 @@ const updateProfile = async (req, res) => {
     const invalidFields = receivedFields.filter(field => !allowedUpdates.includes(field));
     const isValidOperation = invalidFields.length === 0;
 
+    // Enhanced logging for debugging
+    logger.info('Profile update validation:', {
+      userId: req.user._id,
+      receivedFields: receivedFields,
+      allowedFields: allowedUpdates,
+      invalidFields: invalidFields,
+      isValidOperation: isValidOperation,
+      bodySample: JSON.stringify(req.body).substring(0, 300)
+    });
+
+    // Check for nested objects or arrays that might cause issues
+    const fieldTypes = {};
+    receivedFields.forEach(field => {
+      fieldTypes[field] = {
+        type: typeof req.body[field],
+        isArray: Array.isArray(req.body[field]),
+        isObject: req.body[field] !== null && typeof req.body[field] === 'object' && !Array.isArray(req.body[field])
+      };
+    });
+    
+    logger.info('Field types analysis:', {
+      userId: req.user._id,
+      fieldTypes: fieldTypes
+    });
+
     if (!isValidOperation) {
       logger.warn('Invalid profile update fields:', {
         userId: req.user._id,
         invalidFields: invalidFields,
-        receivedFields: receivedFields
+        receivedFields: receivedFields,
+        allowedFields: allowedUpdates
       });
       
       return res.status(400).json({
@@ -142,7 +168,11 @@ const updateProfile = async (req, res) => {
         },
         invalidFields: invalidFields,
         allowedFields: allowedUpdates,
-        receivedFields: receivedFields
+        receivedFields: receivedFields,
+        debug: {
+          bodyType: typeof req.body,
+          bodySample: JSON.stringify(req.body).substring(0, 200)
+        }
       });
     }
 
