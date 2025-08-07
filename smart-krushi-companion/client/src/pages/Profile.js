@@ -240,6 +240,16 @@ const Profile = () => {
       const healthResponse = await fetch('/api/v1/health');
       console.log('Health check response:', healthResponse.status);
       
+      // Test simple endpoint
+      const testResponse = await fetch('/api/v1/test');
+      const testData = await testResponse.json();
+      console.log('Simple test response:', testData);
+      
+      // Test CORS
+      const corsResponse = await fetch('/api/v1/cors-test');
+      const corsData = await corsResponse.json();
+      console.log('CORS test response:', corsData);
+      
       // Test profile endpoint
       const profileResponse = await fetch('/api/v1/auth/profile', {
         headers: {

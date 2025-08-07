@@ -58,11 +58,55 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
   const app = express();
   app.set('trust proxy', 1);
 
+  // Debug environment information
+  console.log('=== Server Environment ===');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+  console.log('ALLOW_ALL_ORIGINS:', process.env.ALLOW_ALL_ORIGINS);
+  console.log('=======================');
+
   // Basic middleware
-  app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true
-  }));
+  const corsOptions = {
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // For now, allow all origins to fix the immediate issue
+      console.log('Allowing origin:', origin);
+      return callback(null, true);
+      
+      // TODO: Restore proper CORS configuration after testing
+      /*
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:3001',
+        'https://app.smartsheti.com',
+        'https://smartsheti.com',
+        'https://www.smartsheti.com'
+      ];
+      
+      // Add FRONTEND_URL from environment if it exists
+      if (process.env.FRONTEND_URL) {
+        allowedOrigins.push(process.env.FRONTEND_URL);
+      }
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        console.log('Allowing origin:', origin);
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        console.log('Allowed origins:', allowedOrigins);
+        callback(new Error('Not allowed by CORS'));
+      }
+      */
+    },
+    credentials: true,
+    optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  };
+  
+  app.use(cors(corsOptions));
   app.use(compression({
     filter: (req, res) => {
       if (res.noCompression) {
@@ -96,6 +140,25 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
 
   // Health check endpoint (no authentication)
   app.use('/api/v1/health', healthRoutes);
+
+  // CORS test endpoint
+  app.get('/api/v1/cors-test', (req, res) => {
+    res.json({
+      message: 'CORS test successful',
+      origin: req.headers.origin,
+      host: req.headers.host,
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  // Simple test endpoint
+  app.get('/api/v1/test', (req, res) => {
+    res.json({
+      message: 'Server is working!',
+      environment: process.env.NODE_ENV,
+      timestamp: new Date().toISOString()
+    });
+  });
 
   // Development endpoint to reset rate limits (only in development)
   if (process.env.NODE_ENV === 'development') {

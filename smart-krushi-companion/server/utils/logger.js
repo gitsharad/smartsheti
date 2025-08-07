@@ -31,6 +31,16 @@ if (process.env.NODE_ENV !== 'production') {
 // Request logging middleware
 const requestLogger = (req, res, next) => {
   const start = Date.now();
+  
+  // Log CORS-related information for debugging
+  console.log('=== Request Debug ===');
+  console.log('Origin:', req.headers.origin);
+  console.log('Host:', req.headers.host);
+  console.log('URL:', req.originalUrl);
+  console.log('Method:', req.method);
+  console.log('User-Agent:', req.get('user-agent'));
+  console.log('===================');
+  
   res.on('finish', () => {
     const duration = Date.now() - start;
     logger.info({
@@ -39,7 +49,8 @@ const requestLogger = (req, res, next) => {
       status: res.statusCode,
       duration: `${duration}ms`,
       userAgent: req.get('user-agent'),
-      ip: req.ip
+      ip: req.ip,
+      origin: req.headers.origin
     });
   });
   next();
