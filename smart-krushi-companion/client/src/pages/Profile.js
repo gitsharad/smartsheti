@@ -164,6 +164,24 @@ const Profile = () => {
       console.error('Error status:', err.response?.status);
       console.error('Error headers:', err.response?.headers);
       console.error('Full error object:', err);
+      
+      // Log the detailed error response
+      if (err.response?.data) {
+        console.error('Error response data:', err.response.data);
+        if (err.response.data.invalidFields) {
+          console.error('Invalid fields:', err.response.data.invalidFields);
+        }
+        if (err.response.data.receivedFields) {
+          console.error('Received fields:', err.response.data.receivedFields);
+        }
+        if (err.response.data.allowedFields) {
+          console.error('Allowed fields:', err.response.data.allowedFields);
+        }
+        if (err.response.data.debug) {
+          console.error('Debug info:', err.response.data.debug);
+        }
+      }
+      
       setError('प्रोफाइल अपडेट करताना त्रुटी आली');
     } finally {
       setSaving(false);
@@ -227,6 +245,34 @@ const Profile = () => {
       console.log('Echo response:', response.data);
     } catch (error) {
       console.error('Echo test error:', error);
+    }
+  };
+
+  // Test function to debug actual profile data
+  const testProfileData = async () => {
+    try {
+      const profileData = {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+        village: formData.village,
+        district: formData.district,
+        state: formData.state,
+        pincode: formData.pincode,
+        preferredLanguage: formData.preferredLanguage,
+        notificationPreferences: formData.notificationPreferences,
+        profileImage: formData.profileImage
+      };
+      console.log('Testing profile data:', profileData);
+      console.log('Data keys:', Object.keys(profileData));
+      console.log('Data stringified:', JSON.stringify(profileData, null, 2));
+      
+      // Try to send this to the echo endpoint
+      const response = await api.post('/auth/profile-echo', profileData);
+      console.log('Profile data echo response:', response.data);
+    } catch (error) {
+      console.error('Profile data test error:', error);
     }
   };
 
@@ -385,6 +431,12 @@ const Profile = () => {
               className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Test Echo
+            </button>
+            <button
+              onClick={testProfileData}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Test Profile Data
             </button>
             <button
               onClick={testApiConnectivity}
