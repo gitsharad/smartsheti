@@ -178,6 +178,15 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
     });
   });
 
+  // Test if updated code is running
+  app.get('/api/v1/test-updated-code', (req, res) => {
+    res.json({
+      message: 'Server has updated code',
+      timestamp: new Date().toISOString(),
+      version: 'updated-profile-controller'
+    });
+  });
+
   // Development endpoint to reset rate limits (only in development)
   if (process.env.NODE_ENV === 'development') {
     app.get('/api/v1/dev/reset-rate-limit', (req, res) => {

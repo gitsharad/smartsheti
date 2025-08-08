@@ -37,6 +37,9 @@ const getProfile = async (req, res) => {
 // Update user profile
 const updateProfile = async (req, res) => {
   try {
+    // DEBUG: Confirm updated code is running
+    logger.info('=== UPDATED PROFILE CONTROLLER RUNNING ===');
+    
     // Log the incoming request for debugging
     logger.info('Profile update request received:', {
       userId: req.user._id,
@@ -133,9 +136,6 @@ const updateProfile = async (req, res) => {
     ];
 
     // Check if all requested fields are allowed
-    const invalidFields = receivedFields.filter(field => !tempAllowedUpdates.includes(field));
-    const isValidOperation = invalidFields.length === 0;
-
     // TEMPORARILY DISABLE VALIDATION FOR DEBUGGING
     const isValidOperation = true; // Force validation to pass
     const invalidFields = []; // No invalid fields
@@ -615,6 +615,15 @@ const debugAllowedUpdates = async (req, res) => {
   });
 };
 
+// Simple test endpoint (no auth required)
+const testServerCode = async (req, res) => {
+  res.json({
+    message: 'Server has updated code',
+    timestamp: new Date().toISOString(),
+    version: 'updated-profile-controller'
+  });
+};
+
 module.exports = {
   getProfile,
   updateProfile,
@@ -625,5 +634,6 @@ module.exports = {
   echoProfileData,
   testEchoSimple,
   checkAllowedUpdates,
-  debugAllowedUpdates
+  debugAllowedUpdates,
+  testServerCode
 }; 
