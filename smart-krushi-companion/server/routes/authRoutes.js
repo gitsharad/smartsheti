@@ -16,7 +16,8 @@ const {
   debugProfileUpdate,
   testProfileUpdate,
   echoProfileData,
-  testEchoSimple
+  testEchoSimple,
+  checkAllowedUpdates
 } = require('../controllers/profileController');
 const { standardLimiter } = require('../utils/security');
 
@@ -44,5 +45,6 @@ router.post('/change-password', auth, changePassword);
 router.patch('/profile-test', auth, testProfileUpdate);
 router.post('/profile-echo', auth, echoProfileData);
 router.post('/profile-echo-simple', auth, testEchoSimple);
+router.post('/profile-check-allowed', auth, checkAllowedUpdates);
 
 module.exports = router; 

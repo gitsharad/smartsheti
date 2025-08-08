@@ -513,6 +513,64 @@ const testEchoSimple = async (req, res) => {
   });
 };
 
+// Simple endpoint to check allowed updates
+const checkAllowedUpdates = async (req, res) => {
+  const allowedUpdates = [
+    // Basic profile fields
+    'name', 
+    'email',
+    'phoneNumber', 
+    'preferredLanguage', 
+    'password',
+    
+    // Address fields
+    'address',
+    'village',
+    'district', 
+    'state',
+    'pincode',
+    
+    // Profile fields
+    'profileImage',
+    'location',
+    'notificationPreferences',
+    'notifications', // Backward compatibility
+    
+    // User model fields
+    'profile',
+    'deviceInfo',
+    'permissions',
+    'isActive',
+    'isVerified',
+    'lastLogin',
+    'lastActive',
+    
+    // Role and management fields
+    'role',
+    'managedBy',
+    'managedUsers',
+    'assignedFields',
+    'ownedFields',
+    
+    // Security fields
+    'passwordResetToken',
+    'passwordResetExpires',
+    'passwordChangedAt',
+    
+    // Timestamps (should not be updated but included for safety)
+    'createdAt',
+    'updatedAt'
+  ];
+  
+  res.json({
+    message: 'Allowed updates check',
+    allowedUpdates: allowedUpdates,
+    receivedFields: Object.keys(req.body),
+    invalidFields: Object.keys(req.body).filter(field => !allowedUpdates.includes(field)),
+    timestamp: new Date().toISOString()
+  });
+};
+
 module.exports = {
   getProfile,
   updateProfile,
@@ -521,5 +579,6 @@ module.exports = {
   debugProfileUpdate,
   testProfileUpdate,
   echoProfileData,
-  testEchoSimple
+  testEchoSimple,
+  checkAllowedUpdates
 }; 
