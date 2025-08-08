@@ -232,6 +232,19 @@ const Profile = () => {
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
+  // Test function to check if server has updated code
+  const testServerCode = async () => {
+    try {
+      console.log('Testing if server has updated code...');
+      const response = await api.get('/test-updated-code');
+      console.log('Server code test response:', response.data);
+      alert(`Server response: ${JSON.stringify(response.data, null, 2)}`);
+    } catch (error) {
+      console.error('Server code test error:', error);
+      alert(`Server test failed: ${error.message}`);
+    }
+  };
+
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
@@ -272,6 +285,12 @@ const Profile = () => {
                 संपादित करा
               </button>
             )}
+            <button
+              onClick={testServerCode}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ml-2"
+            >
+              Test Server Code
+            </button>
           </div>
         </div>
 
