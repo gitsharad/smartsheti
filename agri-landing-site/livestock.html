@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>पशुधन व्यवस्थापन अ‍ॅप्स - स्मार्ट शेती</title>
+  <meta name="description" content="डेअरी, शेळी, पोल्ट्री व सर्व पशुधन व्यवस्थापनासाठी आधुनिक अ‍ॅप्स. शेतकऱ्यांसाठी डिजिटल सोल्यूशन्स.">
+  <meta name="keywords" content="पशुधन, डेअरी, शेळीपालन, पोल्ट्री, Livestock, Dairy, Goat, Poultry, Farm Management, Marathi">
+  <meta property="og:title" content="पशुधन व्यवस्थापन अ‍ॅप्स - स्मार्ट शेती">
+  <meta property="og:description" content="डेअरी, शेळी, पोल्ट्री व सर्व पशुधन व्यवस्थापनासाठी आधुनिक अ‍ॅप्स. शेतकऱ्यांसाठी डिजिटल सोल्यूशन्स.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/livestock.html">
+  <meta property="og:image" content="images/dairy-farm.jpg">
+  <link rel="canonical" href="https://yourdomain.com/livestock.html">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <!-- SwiperJS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <style>
+    body { font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif; }
+    .nav-link { transition: color 0.2s, border-bottom 0.2s; }
+    .nav-link.active, .nav-link:hover { color: #16a34a; border-bottom: 2px solid #16a34a; }
+    .glass-card {
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.18);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34,197,94,0.12);
+    }
+    .feature-icon {
+      font-size: 2.5rem;
+      color: #16a34a;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.85);
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 24px rgba(34,197,94,0.10);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1.5px solid #bbf7d0;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: scale(1.05) translateY(-6px);
+      box-shadow: 0 12px 36px rgba(34,197,94,0.18);
+      background: linear-gradient(120deg, #bbf7d0 0%, #e0fce6 100%);
+    }
+    .swiper {
+      width: 100%;
+      height: 320px;
+      border-radius: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 24px rgba(34,197,94,0.10);
+    }
+    .swiper-slide img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 1.5rem;
+    }
+  </style>
+</head>
+<body class="bg-green-50 text-gray-900">
+  <!-- Navbar -->
+  <nav class="nav-anim sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md py-2 px-4 flex justify-between items-center relative">
+    <a href="index.html" class="flex items-center gap-2">
+      <img src="images/logo.svg" alt="स्मार्ट शेती" class="h-12 w-auto">
+    </a>
+    <button id="menu-toggle" class="block md:hidden text-green-700 focus:outline-none" aria-label="Open menu">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <ul class="desktop-menu hidden md:flex gap-6 text-lg font-semibold">
+      <li><a href="index.html" class="nav-link">मुख्यपृष्ठ</a></li>
+      <li><a href="about.html" class="nav-link">आमच्याबद्दल</a></li>
+      <li><a href="blog.html" class="nav-link">ब्लॉग / अपडेट्स</a></li>
+      <li><a href="contact.html" class="nav-link">संपर्क करा</a></li>
+      <li><a href="livestock.html" class="nav-link active">पशुधन व्यवस्थापन</a></li>
+    </ul>
+    <div id="mobile-menu" class="mobile-menu absolute left-0 w-full bg-white shadow-md hidden flex-col items-center md:hidden"></div>
+  </nav>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuLinks = `
+        <a href="index.html" class="nav-link">मुख्यपृष्ठ</a>
+        <a href="about.html" class="nav-link">आमच्याबद्दल</a>
+        <a href="blog.html" class="nav-link">ब्लॉग / अपडेट्स</a>
+        <a href="contact.html" class="nav-link">संपर्क करा</a>
+        <a href="livestock.html" class="nav-link active">पशुधन व्यवस्थापन</a>
+      `;
+      mobileMenu.innerHTML = menuLinks;
+      menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      mobileMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-yellow-700 to-yellow-400 text-white py-16 px-4 text-center animate__animated animate__fadeInDown">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">पशुधन व्यवस्थापन सोल्यूशन्स</h1>
+    <p class="text-lg md:text-2xl mb-2">डेअरी, शेळी, पोल्ट्री व सर्व पशुधनासाठी आधुनिक अ‍ॅप्स</p>
+    <p class="text-lg">शेतकऱ्यांसाठी डिजिटल सोल्यूशन्स – उत्पादन, आरोग्य, आणि व्यवस्थापन एका ठिकाणी!</p>
+  </section>
+
+  <!-- Livestock Image Slider -->
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="swiper livestock-slider mb-8">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="images/goat-farm.jpg" alt="शेळीपालन फार्म"></div>
+        <div class="swiper-slide"><img src="images/poultry-farm.jpg" alt="पोल्ट्री फार्म"></div>
+        <div class="swiper-slide"><img src="images/dairy-farm.jpg" alt="डेअरी फार्म"></div>
+        <div class="swiper-slide"><img src="images/advanced-farm.jpg" alt="आधुनिक पशुधन फार्म"></div>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Add Navigation -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.livestock-slider', {
+          loop: true,
+          autoplay: { delay: 3000, disableOnInteraction: false },
+          pagination: { el: '.swiper-pagination', clickable: true },
+          navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        });
+      });
+    </script>
+  </div>
+
+  <!-- App Cards Section -->
+  <section class="max-w-5xl mx-auto py-12 px-4 grid md:grid-cols-2 gap-8">
+    <!-- Dairy App -->
+    <div class="feature-card flex flex-col items-center">
+      <img src="images/dairy-farm.jpg" alt="डेअरी अ‍ॅप" class="w-24 h-24 mb-4 rounded-xl shadow">
+      <h2 class="text-2xl font-bold text-yellow-800 mb-2">डेअरी फार्मिंग अ‍ॅप</h2>
+      <p class="mb-4 text-center">दूध उत्पादन, पशु आरोग्य, आणि खर्च व्यवस्थापन एका ठिकाणी. डेअरी शेतकऱ्यांसाठी आधुनिक डिजिटल साधन!</p>
+      <a href="#" class="bg-yellow-700 text-white px-6 py-2 rounded shadow hover:bg-yellow-800 transition">अधिक जाणून घ्या</a>
+    </div>
+    <!-- Goat App -->
+    <div class="feature-card flex flex-col items-center">
+      <img src="images/goat-farm.jpg" alt="शेळीपालन अ‍ॅप" class="w-24 h-24 mb-4 rounded-xl shadow">
+      <h2 class="text-2xl font-bold text-yellow-800 mb-2">शेळीपालन अ‍ॅप</h2>
+      <p class="mb-4 text-center">शेळ्यांचे आरोग्य, प्रजनन, आहार व विक्री व्यवस्थापन. शेळीपालकांसाठी खास डॅशबोर्ड.</p>
+      <a href="#" class="bg-yellow-700 text-white px-6 py-2 rounded shadow hover:bg-yellow-800 transition">अधिक जाणून घ्या</a>
+    </div>
+    <!-- Poultry App -->
+    <div class="feature-card flex flex-col items-center">
+      <img src="images/poultry-farm.jpg" alt="पोल्ट्री अ‍ॅप" class="w-24 h-24 mb-4 rounded-xl shadow">
+      <h2 class="text-2xl font-bold text-yellow-800 mb-2">पोल्ट्री फार्मिंग अ‍ॅप</h2>
+      <p class="mb-4 text-center">अंडी उत्पादन, पक्ष्यांचे आरोग्य, आणि खर्च नियंत्रण. पोल्ट्री शेतकऱ्यांसाठी मराठीत मार्गदर्शन.</p>
+      <a href="#" class="bg-yellow-700 text-white px-6 py-2 rounded shadow hover:bg-yellow-800 transition">अधिक जाणून घ्या</a>
+    </div>
+    <!-- Livestock App -->
+    <div class="feature-card flex flex-col items-center">
+      <img src="images/advanced-farm.jpg" alt="पशुधन व्यवस्थापन अ‍ॅप" class="w-24 h-24 mb-4 rounded-xl shadow">
+      <h2 class="text-2xl font-bold text-yellow-800 mb-2">पशुधन व्यवस्थापन अ‍ॅप</h2>
+      <p class="mb-4 text-center">सर्व प्रकारच्या पशुधनासाठी एकच अ‍ॅप – माहिती, आरोग्य, आर्थिक व्यवस्थापन, रिपोर्ट्स व अलर्ट्स.</p>
+      <a href="#" class="bg-yellow-700 text-white px-6 py-2 rounded shadow hover:bg-yellow-800 transition">अधिक जाणून घ्या</a>
+    </div>
+  </section>
+
+  <footer class="text-center py-8 text-gray-500">
+    &copy; 2025 स्मार्ट शेती. सर्व हक्क राखीव.
+  </footer>
+</body>
+</html>
